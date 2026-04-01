@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# 不允许爬取后台管理页面
+Disallow: /coaching-admin
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /deployment-verification
+
+# Sitemap 位置
+Sitemap: https://www.tktkx.cn/sitemap.xml
