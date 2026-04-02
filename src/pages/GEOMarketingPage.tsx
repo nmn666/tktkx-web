@@ -5,9 +5,10 @@ import { useSEO } from '@/hooks/useSEO';
 
 export default function GEOMarketingPage() {
   useSEO({
-    title: 'GEO本地化营销服务 | 速锋科技 - AI搜索引擎优化·本地曝光',
-    description: '速锋科技GEO营销服务，帮助品牌在DeepSeek、ChatGPT、豆包等AI搜索引擎中获得更多曝光。本地化内容优化，提升AI引用率。微信：SFTKTKTK',
+    title: 'GEO本地化营销服务 | 速锋科技 - AI搜索引擎优化·跨境本地曝光',
+    description: '速锋科技GEO营销服务，帮助跨境电商品牌在DeepSeek、ChatGPT、豆包等AI搜索引擎中获得更多曝光。本地化内容优化，精准触达目标市场客户。微信：SFTKTKTK',
     canonical: 'https://www.tktkx.cn/geo-marketing',
+    keywords: 'GEO营销,GEO本地化营销,AI搜索引擎优化,跨境GEO,本地化营销,AI引用优化,DeepSeek优化,ChatGPT优化,跨境电商营销',
   });
   // 添加结构化数据，帮助AI搜索引擎理解内容
   useEffect(() => {

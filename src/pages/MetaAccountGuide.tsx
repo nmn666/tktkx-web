@@ -5,9 +5,10 @@ import { useSEO } from '@/hooks/useSEO';
 
 export default function MetaAccountGuide() {
   useSEO({
-    title: 'Meta账号注册养号教程 | 速锋科技 - FB/IG账号安全运营指南',
-    description: 'Meta账号注册、双重验证、养号日程完整教程。从Day0到Week4手把手指导，固定IP配置、真人养号策略，避免封号。速锋科技专业团队。微信：SFTKTKTK',
+    title: 'Meta账号注册养号教程2026 | 速锋科技 - FB/IG账号防封安全运营',
+    description: 'Meta/Facebook账号注册、双重验证、养号完整教程2026最新版。固定IP配置、真人养号策略、防封技巧，从Day0到稳定运营手把手指导。微信：SFTKTKTK',
     canonical: 'https://www.tktkx.cn/meta-account-guide',
+    keywords: 'Meta账号,Facebook账号,FB账号养号,Meta账号注册,FB账号防封,Instagram账号,Meta养号教程,Facebook账号购买,FB广告账号',
   });
   // 添加结构化数据，帮助AI搜索引擎理解内容
   useEffect(() => {

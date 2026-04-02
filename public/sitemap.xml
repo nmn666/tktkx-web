@@ -1,93 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- 首页 -->
+  <!-- 首页 - 最高优先级 -->
   <url>
     <loc>https://www.tktkx.cn/</loc>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- TikTok 服务 -->
-  <url>
-    <loc>https://www.tktkx.cn/tiktok-full-moon</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.tktkx.cn/tk-shop-window</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.tktkx.cn/tiktok-register</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.tktkx.cn/video-commerce</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  <!-- TikTok账号市场 - 核心商业页面 -->
   <url>
     <loc>https://www.tktkx.cn/tiktok-market</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- TikTok橱窗号开通教程 -->
+  <url>
+    <loc>https://www.tktkx.cn/tk-shop-window</loc>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- TikTok满月号 -->
   <url>
-    <loc>https://www.tktkx.cn/tk-account-purchase</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://www.tktkx.cn/tiktok-full-moon</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
 
-  <!-- Meta 账号 & 社媒服务 -->
-  <url>
-    <loc>https://www.tktkx.cn/meta-account-guide</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.tktkx.cn/social-media-services</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- GEO 营销 -->
+  <!-- GEO营销 -->
   <url>
     <loc>https://www.tktkx.cn/geo-marketing</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
   </url>
 
-  <!-- 陪跑服务 -->
+  <!-- Meta账号教程 -->
   <url>
-    <loc>https://www.tktkx.cn/coaching-application</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://www.tktkx.cn/meta-account-guide</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
   </url>
 
   <!-- 成功案例 -->
   <url>
     <loc>https://www.tktkx.cn/success-cases</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- TikTok注册教程 -->
+  <url>
+    <loc>https://www.tktkx.cn/tiktok-register</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- 视频带货 -->
+  <url>
+    <loc>https://www.tktkx.cn/video-commerce</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- 账号购买FAQ -->
+  <url>
+    <loc>https://www.tktkx.cn/tk-account-purchase</loc>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- 工具 & 指南 -->
+  <!-- 社媒服务 -->
   <url>
-    <loc>https://www.tktkx.cn/deployment-guide</loc>
+    <loc>https://www.tktkx.cn/social-media-services</loc>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
 
-  <!-- 法律页面 -->
+  <!-- 陪跑申请 -->
+  <url>
+    <loc>https://www.tktkx.cn/coaching-application</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <!-- 服务条款 -->
   <url>
     <loc>https://www.tktkx.cn/terms-of-service</loc>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+
+  <!-- 隐私政策 -->
   <url>
     <loc>https://www.tktkx.cn/privacy-policy</loc>
+    <lastmod>2026-04-02</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

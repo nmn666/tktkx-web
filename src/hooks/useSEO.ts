@@ -5,19 +5,23 @@ interface SEOProps {
   description: string;
   canonical?: string;
   ogImage?: string;
+  keywords?: string;
 }
 
 /**
  * 动态设置页面 SEO 信息
- * 用法：在每个页面组件顶部调用 useSEO({ title, description })
+ * 用法：在每个页面组件顶部调用 useSEO({ title, description, keywords })
  */
-export function useSEO({ title, description, canonical, ogImage }: SEOProps) {
+export function useSEO({ title, description, canonical, ogImage, keywords }: SEOProps) {
   useEffect(() => {
     // 设置 title
     document.title = title;
 
     // 设置 meta description
     setMeta('name', 'description', description);
+
+    // 设置 keywords
+    if (keywords) setMeta('name', 'keywords', keywords);
 
     // 设置 OG tags
     setMeta('property', 'og:title', title);
@@ -42,9 +46,9 @@ export function useSEO({ title, description, canonical, ogImage }: SEOProps) {
 
     // 页面切换后恢复默认
     return () => {
-      document.title = '速锋科技 | TikTok橱窗号陪跑·Meta账号·GEO营销·账号市场';
+      document.title = '速锋科技 | TikTok橱窗号购买·满月号·千粉号·陪跑服务';
     };
-  }, [title, description, canonical, ogImage]);
+  }, [title, description, canonical, ogImage, keywords]);
 }
 
 function setMeta(attrName: string, attrValue: string, content: string) {

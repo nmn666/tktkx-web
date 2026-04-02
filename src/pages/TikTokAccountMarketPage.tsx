@@ -203,9 +203,10 @@ export default function TikTokAccountMarketPage() {
   const [quantity, setQuantity] = useState(1);
   const [agreed, setAgreed] = useState(false);
   useSEO({
-    title: 'TikTok账号市场 | 速锋科技 - 满月号/千粉号/橱窗号购买',
-    description: '速锋科技TikTok账号市场，提供满月号、千粉号、橱窗号等多种账号类型。安全稳定，售后保障。微信：SFTKTKTK',
+    title: 'TikTok账号购买市场 | 速锋科技 - 满月号/千粉号/橱窗号批发',
+    description: '速锋科技TikTok账号购买平台，提供全球85个国家满月白号、TikTok千粉号、TikTok橱窗号批发。安全稳定，24小时发货，售后保障。微信：SFTKTKTK',
     canonical: 'https://www.tktkx.cn/tiktok-market',
+    keywords: 'TikTok账号购买,TikTok满月号购买,TikTok千粉号购买,TikTok橱窗号购买,TikTok账号批发,满月白号,TikTok美国账号,TikTok英国账号,TikTok账号市场',
   });
 
   // 显示所有账号列表
