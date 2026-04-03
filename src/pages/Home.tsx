@@ -521,7 +521,7 @@ export default function Home() {
                       覆盖全球155+个国家和地区，满月号、橱窗号、千粉号等丰富品类
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {['北美', '欧洲', '亚洲', '拉美', '大洋洲', '非洲'].map((region, index) => (
+                      {['美区本土店', '英区本土店', '橱窗号', '满月白号', '店铺测评', '千粉号'].map((region, index) => (
                         <span
                           key={index}
                           className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium"
@@ -531,8 +531,8 @@ export default function Home() {
                       ))}
                     </div>
                   </div>
-                  <a
-                    href="/tiktok-market"
+                  <Link
+                    to="/tiktok-market"
                     className="inline-block"
                   >
                     <motion.button
@@ -543,30 +543,36 @@ export default function Home() {
                       进入账号市场
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </motion.button>
-                  </a>
+                  </Link>
                 </div>
               </motion.div>
 
               {/* 特色卡片 */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
                 {[
                   {
-                    icon: '🌙',
-                    title: '满月号',
-                    description: '注册满30天，已过新手期，可直接开通橱窗',
-                    highlight: '¥3.99起'
+                    icon: '🏪',
+                    title: 'TikTok 店铺',
+                    description: '美区/英区本土店注册，提供全套资料支持，协助快速过审开通',
+                    highlight: '立即咨询'
                   },
                   {
                     icon: '🛒',
                     title: '橱窗号',
-                    description: '已开通橱窗功能，可直接开始带货赚钱',
-                    highlight: '¥29.99起'
+                    description: '已开通橱窗功能，自带1000+真实粉丝，拿到手即可开始带货赚钱',
+                    highlight: '¥85起'
                   },
                   {
-                    icon: '👥',
-                    title: '千粉号',
-                    description: '千粉以上账号，粉丝真实活跃，转化率高',
-                    highlight: '¥49.99起'
+                    icon: '🌕',
+                    title: '满月白号',
+                    description: '注册满30天，纯净IP环境，权重极高，非常适合起号与合规养号',
+                    highlight: '¥9起'
+                  },
+                  {
+                    icon: '⭐',
+                    title: '店铺测评',
+                    description: '真人手工操作，提升店铺权重与转化率，安全防封，真实评价反馈',
+                    highlight: '¥15起'
                   }
                 ].map((feature, index) => (
                   <motion.div
