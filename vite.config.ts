@@ -5,7 +5,7 @@ import cloudIDEReactRefresh from '@coze-arch/vite-plugin-react-refresh-cloudide'
 
 
 function getPlugins() {
-  const plugins = [cloudIDEReactRefresh(),react(), tsconfigPaths()];
+  const plugins = [react(), tsconfigPaths()];
   return plugins;
 }
 
