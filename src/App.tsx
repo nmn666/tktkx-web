@@ -21,6 +21,7 @@ import GEOMarketingPage from "@/pages/GEOMarketingPage";
 import MetaAccountGuide from "@/pages/MetaAccountGuide";
 import NewsPage from "@/pages/NewsPage";
 import NewsDetailPage from "@/pages/NewsDetailPage";
+import AdminPage from "@/pages/AdminPage";
 import AuthProvider, { useAuth } from '@/contexts/authContext';
 
 function AppContent() {
@@ -48,6 +49,7 @@ function AppContent() {
       <Route path="/meta-account-guide" element={<MetaAccountGuide />} />
       <Route path="/news" element={<NewsPage />} />
       <Route path="/news/:id" element={<NewsDetailPage />} />
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );
 }

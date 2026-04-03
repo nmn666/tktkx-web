@@ -1,118 +1,144 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/storage/database/supabase-client';
+import type { User, Session } from '@supabase/supabase-js';
+
+// ─── 类型定义 ──────────────────────────────────────────────
+interface AuthUser {
+  id: string;
+  username: string;
+  email: string;
+  isAdmin: boolean;
+}
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: {
-    username: string;
-  } | null;
-  login: (username: string) => void;
-  register: (username: string) => void;
-  logout: () => void;
-  setIsAuthenticated: (value: boolean) => void;
+  user: AuthUser | null;
+  session: Session | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<{ error: string | null }>;
+  register: (username: string, email: string, password: string) => Promise<{ error: string | null }>;
+  logout: () => Promise<void>;
+  // 兼容旧代码（只传用户名的调用方式）
+  setIsAuthenticated: (v: boolean) => void;
 }
+
+// ─── 管理员邮箱列表（在这里维护，不暴露到前端逻辑） ────────
+const ADMIN_EMAILS = ['admin@tktkx.cn', '58734099@qq.com'];
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   user: null,
-  login: () => {},
-  register: () => {},
-  logout: () => {},
+  session: null,
+  loading: true,
+  login: async () => ({ error: null }),
+  register: async () => ({ error: null }),
+  logout: async () => {},
   setIsAuthenticated: () => {},
 });
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
-interface AuthProviderProps {
-  children: React.ReactNode;
+// ─── 从 Supabase User 提取 AuthUser ────────────────────────
+function toAuthUser(supabaseUser: User): AuthUser {
+  const meta = supabaseUser.user_metadata || {};
+  return {
+    id: supabaseUser.id,
+    username: meta.username || supabaseUser.email?.split('@')[0] || '用户',
+    email: supabaseUser.email || '',
+    isAdmin: ADMIN_EMAILS.includes(supabaseUser.email || ''),
+  };
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{
-    username: string;
-  } | null>(null);
+// ─── Provider ──────────────────────────────────────────────
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // 从localStorage加载用户状态
   useEffect(() => {
-    const storedAuth = localStorage.getItem('isAuthenticated');
-    const storedUser = localStorage.getItem('user');
-    
-    if (storedAuth === 'true' && storedUser) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(storedUser));
-    }
+    // 初始化：获取当前 session
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) {
+        setSession(data.session);
+        setUser(toAuthUser(data.session.user));
+      }
+      setLoading(false);
+    });
+
+    // 监听 auth 状态变化
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, sess) => {
+      if (sess?.user) {
+        setSession(sess);
+        setUser(toAuthUser(sess.user));
+      } else {
+        setSession(null);
+        setUser(null);
+      }
+    });
+
+    return () => listener.subscription.unsubscribe();
   }, []);
 
-  const login = (username: string) => {
-    const userData = {
-      username,
-    };
-    
-    setIsAuthenticated(true);
-    setUser(userData);
-    
-    // 保存到localStorage
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
-
-  const register = async (username: string) => {
-    const userData = {
-      username,
-    };
-    
-    setIsAuthenticated(true);
-    setUser(userData);
-    
-    // 保存到localStorage
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('user', JSON.stringify(userData));
-
-    // 同时保存到 Supabase 数据库（用于服务中心查看）
-    try {
-      const { getSupabaseClient } = await import('@/storage/database/supabase-client');
-      const client = getSupabaseClient();
-
-      // 检查是否已存在该用户
-      const { data: existingUser } = await client
-        .from('registered_users')
-        .select('username')
-        .eq('username', username)
-        .single();
-
-      // 如果用户不存在，则插入新用户
-      if (!existingUser) {
-        await client
-          .from('registered_users')
-          .insert({
-            username,
-          });
-      }
-    } catch (error) {
-      console.error('保存用户到数据库失败:', error);
+  // ── 登录（邮箱 + 密码） ──
+  const login = async (email: string, password: string): Promise<{ error: string | null }> => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      if (error.message.includes('Invalid login credentials')) return { error: '邮箱或密码错误' };
+      if (error.message.includes('Email not confirmed')) return { error: '请先验证邮箱后再登录' };
+      return { error: error.message };
     }
+    return { error: null };
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    
-    // 清除localStorage
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('user');
+  // ── 注册（用户名 + 邮箱 + 密码） ──
+  const register = async (
+    username: string,
+    email: string,
+    password: string
+  ): Promise<{ error: string | null }> => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { username },          // 存入 user_metadata
+        emailRedirectTo: undefined,  // 不发验证邮件（可后续开启）
+      },
+    });
+
+    if (error) {
+      if (error.message.includes('already registered')) return { error: '该邮箱已被注册' };
+      return { error: error.message };
+    }
+
+    // 同时写入自定义 user_profiles 表（方便后台查看）
+    if (data.user) {
+      await supabase.from('user_profiles').upsert({
+        id: data.user.id,
+        username,
+        email,
+        created_at: new Date().toISOString(),
+      });
+    }
+
+    return { error: null };
+  };
+
+  // ── 登出 ──
+  const logout = async () => {
+    await supabase.auth.signOut();
   };
 
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated,
+        isAuthenticated: !!user,
         user,
+        session,
+        loading,
         login,
         register,
         logout,
-        setIsAuthenticated,
+        setIsAuthenticated: () => {},   // 兼容旧代码，无实际作用
       }}
     >
       {children}

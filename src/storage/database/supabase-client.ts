@@ -1,59 +1,44 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-interface SupabaseCredentials {
-  url: string;
-  anonKey: string;
-}
+// 支持 Vercel 环境变量 VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
+// 同时兼容旧的 COZE_ 前缀变量
+function getCredentials() {
+  const url =
+    (import.meta as any).env?.VITE_SUPABASE_URL ||
+    (globalThis as any).COZE_SUPABASE_URL ||
+    (import.meta as any).env?.VITE_COZE_SUPABASE_URL;
 
-// 使用 Vite 的环境变量
-function getSupabaseCredentials(): SupabaseCredentials {
-  // 优先从全局变量获取，其次从环境变量获取
-  const url = (globalThis as any).COZE_SUPABASE_URL || (import.meta as any).env?.VITE_COZE_SUPABASE_URL || (import.meta as any).env?.COZE_SUPABASE_URL;
-  const anonKey = (globalThis as any).COZE_SUPABASE_ANON_KEY || (import.meta as any).env?.VITE_COZE_SUPABASE_ANON_KEY || (import.meta as any).env?.COZE_SUPABASE_ANON_KEY;
-
-  if (!url) {
-    throw new Error('COZE_SUPABASE_URL is not set');
-  }
-  if (!anonKey) {
-    throw new Error('COZE_SUPABASE_ANON_KEY is not set');
-  }
+  const anonKey =
+    (import.meta as any).env?.VITE_SUPABASE_ANON_KEY ||
+    (globalThis as any).COZE_SUPABASE_ANON_KEY ||
+    (import.meta as any).env?.VITE_COZE_SUPABASE_ANON_KEY;
 
   return { url, anonKey };
 }
 
-function getSupabaseClient(token?: string): SupabaseClient {
-  try {
-    const { url, anonKey } = getSupabaseCredentials();
+let _client: SupabaseClient | null = null;
 
-    if (token) {
-      return createClient(url, anonKey, {
-        global: {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-        db: {
-          timeout: 60000,
-        },
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      });
-    }
+export function getSupabaseClient(): SupabaseClient {
+  if (_client) return _client;
 
-    return createClient(url, anonKey, {
-      db: {
-        timeout: 60000,
-      },
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    });
-  } catch (error) {
-    console.error('Supabase 客户端初始化失败:', error);
-    // 返回一个模拟的客户端，避免页面崩溃
-    return createClient('https://placeholder.supabase.co', 'placeholder-key') as any;
+  const { url, anonKey } = getCredentials();
+
+  if (!url || !anonKey) {
+    console.warn('Supabase 环境变量未配置，部分功能不可用');
+    // 返回占位客户端，防止页面崩溃
+    _client = createClient('https://placeholder.supabase.co', 'placeholder-anon-key');
+    return _client;
   }
+
+  _client = createClient(url, anonKey, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+    },
+  });
+
+  return _client;
 }
 
-export { getSupabaseClient };
+export const supabase = getSupabaseClient();
