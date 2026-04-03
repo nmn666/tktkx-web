@@ -20,8 +20,11 @@ import {
   Globe,
   Package,
   LogOut,
-  User
+  User,
+  Calendar,
+  Tag
 } from 'lucide-react';
+import newsData from '@/data/news.json';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // 模拟案例数据
@@ -265,6 +268,7 @@ export default function Home() {
               { text: '服务介绍', href: '#服务介绍' },
               { text: 'TikTok 账号市场', href: '/tiktok-market', isExternal: true },
               { text: '成功案例', href: '#成功案例' },
+              { text: '行业资讯', href: '/news', isExternal: true },
               { text: '常见问题', href: '#常见问题' },
               { text: '联系我们', href: '#联系我们' }
             ].map((item, index) => (
@@ -1077,6 +1081,61 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 行业资讯 */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+              <div>
+                <motion.h2 
+                  className="text-3xl md:text-4xl font-black text-gray-900 mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  行业资讯 & <span className="text-pink-600">实战干货</span>
+                </motion.h2>
+                <p className="text-gray-500 max-w-xl">
+                  每日更新 TikTok 运营前沿资讯与海外社媒引流秘籍，助您在跨境电商红海中精准获客。
+                </p>
+              </div>
+              <Link 
+                to="/news"
+                className="group flex items-center text-blue-600 font-bold hover:text-blue-700 transition-colors"
+              >
+                查看全部干货 <ChevronRight className="h-5 w-5 ml-1 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {newsData.slice(0, 3).map((news, index) => (
+                <motion.div
+                  key={news.id}
+                  className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm hover:shadow-xl transition-all group flex flex-col h-full"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <div className="flex items-center space-x-3 mb-4 text-xs text-gray-400">
+                    <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> {news.date}</span>
+                    <span className="flex items-center text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded"><Tag className="h-3 w-3 mr-1" /> {news.category}</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors leading-tight">{news.title}</h3>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-8 flex-grow line-clamp-3">
+                    {news.summary}
+                  </p>
+                  <Link 
+                    to={`/news/${news.id}`}
+                    className="flex items-center text-sm font-black text-gray-900 group-hover:text-blue-600 transition-colors"
+                  >
+                    阅读全文 <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-2 transition-transform" />
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* 常见问题 */}
         <section id="常见问题" className="py-16 bg-gray-50">
           {/* ✅ SEO/GEO 优化：权威总结区块 */}
@@ -1341,6 +1400,7 @@ export default function Home() {
                   { text: "TK橱窗号开通条件", url: "/tk-shop-window" },
                   { text: "TikTok账号注册流程", url: "/tiktok-register" },
                   { text: "视频带货避坑指南", url: "/video-commerce" },
+                  { text: "行业资讯 & 干货", url: "/news" },
                   { text: "账号购买常见问题", url: "/tk-account-purchase" },
                   { text: "TikTok账号市场", url: "/tiktok-market" }
                 ]
