@@ -1,6 +1,5 @@
 {
-  "buildCommand": "pnpm install --prefer-frozen-lockfile && npx vite build",
+  "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --prefer-frozen-lockfile",
   "framework": "vite"
 }
