@@ -106,7 +106,7 @@ export default function SocialMediaServicesPage() {
                 }`}
               >
                 <div className="flex items-center">
-                  <img src={p.icon} className="w-5 h-5 mr-3 object-contain" alt="" />
+                  <img src={p.icon} className="w-5 h-5 mr-3 object-contain" alt={`${p.name} 平台图标`} />
                   <span className={`text-[13px] ${selectedPlatform === p.id ? 'font-bold' : ''}`}>{p.name}</span>
                 </div>
                 <ChevronRight className={`h-3 w-3 ${selectedPlatform === p.id ? 'text-[#1a56db]' : 'text-[#ddd]'}`} />
