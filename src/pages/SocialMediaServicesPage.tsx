@@ -209,7 +209,7 @@ export default function SocialMediaServicesPage() {
                   ].map((item, idx) => (
                     <div key={idx} className="bg-white border border-[#eef1f6] rounded p-2.5 flex items-center">
                       <div className="bg-[#1a56db] p-1.5 rounded mr-3 text-white">
-                        {Object.cloneElement(item.icon as React.ReactElement, { size: 14 })}
+                        {React.cloneElement(item.icon as React.ReactElement, { size: 14 })}
                       </div>
                       <div>
                         <div className="text-[12px] font-bold text-[#333] leading-none mb-1">{item.label}</div>

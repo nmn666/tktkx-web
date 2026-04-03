@@ -132,7 +132,7 @@ export default function TikTokAccountMarketPage() {
               <div className="flex items-center justify-between mt-10 border-t border-[#f5f7fa] pt-8 absolute bottom-8 left-8 right-8">
                 <div className="flex items-baseline">
                   <span className="text-[#666] text-[14px] mr-2">支付金额：</span>
-                  <span className="text-[#1a56db] font-bold text-2xl">¥ {(quantity * 9.00).toFixed(2)}</span>
+                  <span className="text-[#1a56db] font-bold text-2xl">¥ {(quantity * selectedAccount.price).toFixed(2)}</span>
                 </div>
                 <button className="bg-[#1a56db] text-white px-12 py-3 rounded text-[15px] font-bold hover:bg-[#154ec1] shadow-lg shadow-blue-200">
                   立即购买
@@ -165,6 +165,31 @@ export default function TikTokAccountMarketPage() {
                         <div className="text-[12px] font-bold text-[#333] leading-none mb-1">{item.label}</div>
                         <div className="text-[10px] text-[#ccc] leading-none">{item.desc}</div>
                       </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-2 pt-2">
+                  <p className="text-[12px] font-bold text-[#333]">⚠️ 注意事项：</p>
+                  {['购买后请务必更改密码', '使用纯净住宅IP', '不要频繁切换设备'].map((note, idx) => (
+                    <div key={idx} className="flex items-start text-[11px] text-[#666]">
+                      <span className="text-[#ff4d4f] mr-1.5 font-bold">★</span>
+                      <span>{note}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <button className="w-full bg-[#1a56db] text-white py-4 rounded-lg font-bold flex items-center justify-center shadow-md">
+              <HeadphonesIcon className="h-4 w-4 mr-2" />
+              订单售后客服
+            </button>
+          </aside>
+        </div>
+      </main>
+    </div>
+  );
+}
+                    </div>
                     </div>
                   ))}
                 </div>
