@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home";
 import TikTokFullMoonPage from "@/pages/TikTokFullMoonPage";
 import TKShopWindowPage from "@/pages/TKShopWindowPage";
@@ -14,7 +14,7 @@ import CoachingAdminPage from "@/pages/CoachingAdminPage";
 import SuccessCasesPage from "@/pages/SuccessCasesPage";
 import TermsOfServicePage from "@/pages/TermsOfServicePage";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
-import SocialMediaServicesPage from "@/pages/SocialMediaServicesPage";
+// SocialMediaServicesPage 已合并到 TikTokAccountMarketPage
 import OpenClawDeploymentGuide from "@/pages/OpenClawDeploymentGuide";
 import DeploymentVerification from "@/pages/DeploymentVerification";
 import GEOMarketingPage from "@/pages/GEOMarketingPage";
@@ -41,7 +41,7 @@ function AppContent() {
       <Route path="/success-cases" element={<SuccessCasesPage />} />
       <Route path="/terms-of-service" element={<TermsOfServicePage />} />
       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-      <Route path="/social-media-services" element={<SocialMediaServicesPage />} />
+      <Route path="/social-media-services" element={<Navigate to="/tiktok-market" replace />} />
       <Route path="/deployment-guide" element={<OpenClawDeploymentGuide />} />
       <Route path="/deployment-verification" element={<DeploymentVerification />} />
       <Route path="/geo-marketing" element={<GEOMarketingPage />} />
