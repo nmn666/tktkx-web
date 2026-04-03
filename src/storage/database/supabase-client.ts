@@ -1,44 +1,13 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
-// 支持 Vercel 环境变量 VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
-// 同时兼容旧的 COZE_ 前缀变量
-function getCredentials() {
-  const url =
-    (import.meta as any).env?.VITE_SUPABASE_URL ||
-    (globalThis as any).COZE_SUPABASE_URL ||
-    (import.meta as any).env?.VITE_COZE_SUPABASE_URL;
+// Supabase 项目配置（anon key 是公开安全的，可以放前端）
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://radypjzuikwasqeofxqc.supabase.co';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhZHlwanp1aWt3YXNxZW9meHFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMjQwMDksImV4cCI6MjA5MDgwMDAwOX0.xvqR4Px-FhzKzcgB32tfSsq7-7T2RPTZzJXlVxGCaxs';
 
-  const anonKey =
-    (import.meta as any).env?.VITE_SUPABASE_ANON_KEY ||
-    (globalThis as any).COZE_SUPABASE_ANON_KEY ||
-    (import.meta as any).env?.VITE_COZE_SUPABASE_ANON_KEY;
-
-  return { url, anonKey };
-}
-
-let _client: SupabaseClient | null = null;
-
-export function getSupabaseClient(): SupabaseClient {
-  if (_client) return _client;
-
-  const { url, anonKey } = getCredentials();
-
-  if (!url || !anonKey) {
-    console.warn('Supabase 环境变量未配置，部分功能不可用');
-    // 返回占位客户端，防止页面崩溃
-    _client = createClient('https://placeholder.supabase.co', 'placeholder-anon-key');
-    return _client;
-  }
-
-  _client = createClient(url, anonKey, {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true,
-    },
-  });
-
-  return _client;
-}
-
-export const supabase = getSupabaseClient();
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
+});

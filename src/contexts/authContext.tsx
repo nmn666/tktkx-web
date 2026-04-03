@@ -107,17 +107,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (error) {
       if (error.message.includes('already registered')) return { error: '该邮箱已被注册' };
+      if (error.message.includes('User already registered')) return { error: '该邮箱已被注册' };
+      if (error.message.includes('invalid')) return { error: '邮箱格式不正确' };
       return { error: error.message };
     }
 
-    // 同时写入自定义 user_profiles 表（方便后台查看）
+    // 注册后自动登录（Supabase 默认注册后就有 session，除非开启了邮件验证）
+    // 同时写入自定义 user_profiles 表（写失败不影响注册流程）
     if (data.user) {
-      await supabase.from('user_profiles').upsert({
-        id: data.user.id,
-        username,
-        email,
-        created_at: new Date().toISOString(),
-      });
+      try {
+        await supabase.from('user_profiles').upsert({
+          id: data.user.id,
+          username,
+          email,
+          created_at: new Date().toISOString(),
+        });
+      } catch {
+        // 表不存在时静默忽略，不影响注册
+      }
     }
 
     return { error: null };
