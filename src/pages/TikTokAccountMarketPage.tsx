@@ -135,13 +135,14 @@ export default function TikTokAccountMarketPage() {
             </div>
           </div>
           <div className="flex items-center space-x-4 text-xs">
-            <div className="bg-white border border-[#eef1f6] rounded-full px-4 py-1.5 flex items-center shadow-sm">
-              <span className="text-[#999] mr-3">当前余额: <span className="text-[#1a56db] font-bold">¥ 0.00</span></span>
-              <div className="w-[1px] h-3 bg-[#eee] mr-3" />
-              <span className="font-medium text-[#333] flex items-center">
-                {user?.username || '游客'} <ChevronRight className="h-3 w-3 ml-1 text-[#ccc]" />
-              </span>
-            </div>
+            <a
+              href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-4 py-1.5 flex items-center shadow-sm transition-colors font-medium"
+            >
+              微信咨询 SFTKTKTK
+            </a>
           </div>
         </div>
       </header>
