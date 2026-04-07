@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/storage/database/supabase-client';
-import type { User, Session } from '@supabase/supabase-js';
 
-// ─── 类型定义 ──────────────────────────────────────────────
+// ─── 类型 ─────────────────────────────────────────────────
 interface AuthUser {
   id: string;
   username: string;
@@ -10,144 +8,148 @@ interface AuthUser {
   isAdmin: boolean;
 }
 
+interface StoredUser {
+  id: string;
+  username: string;
+  email: string;
+  passwordHash: string;  // 简单 hash，防止明文存储
+  createdAt: string;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
   user: AuthUser | null;
-  session: Session | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ error: string | null }>;
   register: (username: string, email: string, password: string) => Promise<{ error: string | null }>;
-  logout: () => Promise<void>;
-  // 兼容旧代码（只传用户名的调用方式）
+  logout: () => void;
   setIsAuthenticated: (v: boolean) => void;
 }
 
-// ─── 管理员邮箱列表（在这里维护，不暴露到前端逻辑） ────────
+// ─── 管理员邮箱 ───────────────────────────────────────────
 const ADMIN_EMAILS = ['admin@tktkx.cn', '58734099@qq.com'];
+const USERS_KEY = 'tktkx_users';
+const SESSION_KEY = 'tktkx_session';
 
+// ─── 简单密码 hash（非明文存储） ──────────────────────────
+function simpleHash(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36) + str.length.toString(36);
+}
+
+// ─── 用户存储操作 ─────────────────────────────────────────
+function getUsers(): StoredUser[] {
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+  } catch { return []; }
+}
+
+function saveUsers(users: StoredUser[]) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function getSession(): AuthUser | null {
+  try {
+    return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+  } catch { return null; }
+}
+
+function saveSession(user: AuthUser | null) {
+  if (user) localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+  else localStorage.removeItem(SESSION_KEY);
+}
+
+// ─── Context ─────────────────────────────────────────────
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   user: null,
-  session: null,
-  loading: true,
+  loading: false,
   login: async () => ({ error: null }),
   register: async () => ({ error: null }),
-  logout: async () => {},
+  logout: () => {},
   setIsAuthenticated: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
 
-// ─── 从 Supabase User 提取 AuthUser ────────────────────────
-function toAuthUser(supabaseUser: User): AuthUser {
-  const meta = supabaseUser.user_metadata || {};
-  return {
-    id: supabaseUser.id,
-    username: meta.username || supabaseUser.email?.split('@')[0] || '用户',
-    email: supabaseUser.email || '',
-    isAdmin: ADMIN_EMAILS.includes(supabaseUser.email || ''),
-  };
-}
-
-// ─── Provider ──────────────────────────────────────────────
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // 初始化：读取本地 session
   useEffect(() => {
-    // 初始化：获取当前 session
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) {
-        setSession(data.session);
-        setUser(toAuthUser(data.session.user));
-      }
-      setLoading(false);
-    });
-
-    // 监听 auth 状态变化
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, sess) => {
-      if (sess?.user) {
-        setSession(sess);
-        setUser(toAuthUser(sess.user));
-      } else {
-        setSession(null);
-        setUser(null);
-      }
-    });
-
-    return () => listener.subscription.unsubscribe();
+    const session = getSession();
+    if (session) setUser(session);
+    setLoading(false);
   }, []);
 
-  // ── 登录（邮箱 + 密码） ──
+  // ── 登录 ──
   const login = async (email: string, password: string): Promise<{ error: string | null }> => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      if (error.message.includes('Invalid login credentials')) return { error: '邮箱或密码错误' };
-      if (error.message.includes('Email not confirmed')) return { error: '请先验证邮箱后再登录' };
-      return { error: error.message };
-    }
+    const users = getUsers();
+    const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (!found) return { error: '该邮箱未注册，请先注册' };
+    if (found.passwordHash !== simpleHash(password)) return { error: '密码错误' };
+
+    const authUser: AuthUser = {
+      id: found.id,
+      username: found.username,
+      email: found.email,
+      isAdmin: ADMIN_EMAILS.includes(found.email.toLowerCase()),
+    };
+    setUser(authUser);
+    saveSession(authUser);
     return { error: null };
   };
 
-  // ── 注册（用户名 + 邮箱 + 密码） ──
-  const register = async (
-    username: string,
-    email: string,
-    password: string
-  ): Promise<{ error: string | null }> => {
-    const { data, error } = await supabase.auth.signUp({
+  // ── 注册 ──
+  const register = async (username: string, email: string, password: string): Promise<{ error: string | null }> => {
+    const users = getUsers();
+    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+      return { error: '该邮箱已被注册' };
+    }
+
+    const newUser: StoredUser = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+      username,
       email,
-      password,
-      options: {
-        data: { username },          // 存入 user_metadata
-        emailRedirectTo: undefined,  // 不发验证邮件（可后续开启）
-      },
-    });
+      passwordHash: simpleHash(password),
+      createdAt: new Date().toISOString(),
+    };
+    saveUsers([...users, newUser]);
 
-    if (error) {
-      if (error.message.includes('already registered')) return { error: '该邮箱已被注册' };
-      if (error.message.includes('User already registered')) return { error: '该邮箱已被注册' };
-      if (error.message.includes('invalid')) return { error: '邮箱格式不正确' };
-      return { error: error.message };
-    }
-
-    // 注册后自动登录（Supabase 默认注册后就有 session，除非开启了邮件验证）
-    // 同时写入自定义 user_profiles 表（写失败不影响注册流程）
-    if (data.user) {
-      try {
-        await supabase.from('user_profiles').upsert({
-          id: data.user.id,
-          username,
-          email,
-          created_at: new Date().toISOString(),
-        });
-      } catch {
-        // 表不存在时静默忽略，不影响注册
-      }
-    }
-
+    // 注册后自动登录
+    const authUser: AuthUser = {
+      id: newUser.id,
+      username,
+      email,
+      isAdmin: ADMIN_EMAILS.includes(email.toLowerCase()),
+    };
+    setUser(authUser);
+    saveSession(authUser);
     return { error: null };
   };
 
   // ── 登出 ──
-  const logout = async () => {
-    await supabase.auth.signOut();
+  const logout = () => {
+    setUser(null);
+    saveSession(null);
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        isAuthenticated: !!user,
-        user,
-        session,
-        loading,
-        login,
-        register,
-        logout,
-        setIsAuthenticated: () => {},   // 兼容旧代码，无实际作用
-      }}
-    >
+    <AuthContext.Provider value={{
+      isAuthenticated: !!user,
+      user,
+      loading,
+      login,
+      register,
+      logout,
+      setIsAuthenticated: () => {},
+    }}>
       {children}
     </AuthContext.Provider>
   );
