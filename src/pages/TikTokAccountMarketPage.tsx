@@ -16,19 +16,162 @@ import {
 
 // ─── 账号购买数据 ───────────────────────────────────────────
 const accountCategories = [
-  { id: 'us',         name: '美国账号',     icon: '🇺🇸' },
-  { id: 'uk',         name: '英国账号',     icon: '🇬🇧' },
-  { id: 'sea',        name: '东南亚账号',   icon: '🌏' },
-  { id: 'eu',         name: '欧洲账号',     icon: '🇪🇺' },
-  { id: 'full-moon',  name: '满月号/千粉号', icon: '🌕' },
-  { id: 'natural',    name: '自然流账号',   icon: '🌱' },
+  { id: 'all',        name: '全部账号',       icon: '🌐' },
+  { id: 'hot',        name: '热销爆款',       icon: '🔥' },
+  { id: 'full-moon',  name: '满月号/千粉号',  icon: '🌕' },
+  { id: 'us',         name: '美国',           icon: '🇺🇸' },
+  { id: 'uk',         name: '英国',           icon: '🇬🇧' },
+  { id: 'sea',        name: '东南亚',         icon: '🌏' },
+  { id: 'eu',         name: '欧洲',           icon: '🇪🇺' },
+  { id: 'me',         name: '中东',           icon: '🌙' },
+  { id: 'la',         name: '拉丁美洲',       icon: '🌎' },
+  { id: 'af',         name: '非洲',           icon: '🌍' },
+  { id: 'other',      name: '其他地区',       icon: '📌' },
 ];
 
 const accountTypes = [
-  { id: 1, title: '美国-满月白号',       region: 'US', tag: '邮箱号', price: 9.00,  stock: 500, description: '注册满30天，权重稳定，适合开通橱窗。' },
-  { id: 2, title: '美国-橱窗号(1000粉)', region: 'US', tag: '橱窗号', price: 85.00, stock: 120, description: '已开通橱窗功能，自带1000+真实粉丝，拿到手即可带货。' },
-  { id: 3, title: '英国-满月白号',       region: 'UK', tag: '邮箱号', price: 12.00, stock: 300, description: '注册满30天，英区高权重账号，适合开通英区店铺。' },
-  { id: 4, title: '美区本土店(资料协助)', region: 'US', tag: '店铺',  price: 0,     stock: 999, description: '提供美区本土店注册全套资料支持，协助过审开通。' },
+  // ── 热销 / 满月号 / 千粉号 ──────────────────────────────
+  { id: 1,   title: '美国-满月白号',           region: 'US|hot|full-moon|all', tag: '邮箱号',  price: 9,    stock: 500, description: '注册满30天，权重稳定，适合养号开通橱窗，批量可优惠。' },
+  { id: 2,   title: '美国-橱窗号(1000粉)',      region: 'US|hot|full-moon|all', tag: '橱窗号',  price: 85,   stock: 120, description: '已开通橱窗功能，自带1000+真实粉丝，到手即可带货。' },
+  { id: 3,   title: '英国-满月白号',           region: 'UK|hot|full-moon|all', tag: '邮箱号',  price: 12,   stock: 300, description: '注册满30天，英区高权重，适合开通英区TikTok Shop。' },
+  { id: 4,   title: '英国-橱窗号(1000粉)',      region: 'UK|full-moon|all',     tag: '橱窗号',  price: 98,   stock: 80,  description: '英区千粉橱窗号，可直接开通橱窗挂英区商品链接。' },
+  { id: 5,   title: '全球通用满月白号',         region: 'hot|full-moon|all',    tag: '满月号',  price: 8,    stock: 999, description: '多国随机发货满月号，适合批量采购养号使用。' },
+  { id: 6,   title: '高权重千粉号(多区可选)',   region: 'hot|full-moon|all',    tag: '千粉号',  price: 79,   stock: 200, description: '粉丝1000+高互动账号，可指定美/英/东南亚区域。' },
+
+  // ── 美国 ────────────────────────────────────────────────
+  { id: 10,  title: '美国-5000粉高权重号',      region: 'US|all',              tag: '高粉号',  price: 260,  stock: 30,  description: '自带5000+真实粉丝，账号权重极高，适合快速启动带货。' },
+  { id: 11,  title: '美区本土店(资料协助)',       region: 'US|all',              tag: '店铺',    price: 0,    stock: 999, description: '提供美区本土店注册全套资料支持，协助过审开通。' },
+
+  // ── 英国 ────────────────────────────────────────────────
+  { id: 20,  title: '英国-5000粉账号',          region: 'UK|all',              tag: '高粉号',  price: 280,  stock: 20,  description: '英区5000+粉丝账号，适合英国市场品牌推广。' },
+
+  // ── 东南亚 ──────────────────────────────────────────────
+  { id: 30,  title: '泰国-满月白号',            region: 'sea|all',             tag: '邮箱号',  price: 8,    stock: 400, description: '泰区注册满30天账号，适合泰国市场运营。' },
+  { id: 31,  title: '泰国-橱窗号(1000粉)',       region: 'sea|all',             tag: '橱窗号',  price: 72,   stock: 90,  description: '泰区千粉橱窗号，挂载泰区商品直接带货。' },
+  { id: 32,  title: '越南-满月白号',            region: 'sea|all',             tag: '邮箱号',  price: 7,    stock: 500, description: '越南区满月号，适合越南市场内容运营。' },
+  { id: 33,  title: '越南-橱窗号(1000粉)',       region: 'sea|all',             tag: '橱窗号',  price: 68,   stock: 100, description: '越南区千粉橱窗号，东南亚电商首选。' },
+  { id: 34,  title: '印度尼西亚-满月白号',       region: 'sea|all',             tag: '邮箱号',  price: 7,    stock: 600, description: '印尼区满月号，东南亚最大市场入口。' },
+  { id: 35,  title: '印度尼西亚-橱窗号',         region: 'sea|all',             tag: '橱窗号',  price: 65,   stock: 120, description: '印尼区千粉橱窗号，适合印尼TikTok Shop运营。' },
+  { id: 36,  title: '菲律宾-满月白号',          region: 'sea|all',             tag: '邮箱号',  price: 7,    stock: 350, description: '菲律宾区满月号，菲律宾是东南亚TikTok增长最快市场。' },
+  { id: 37,  title: '菲律宾-橱窗号',            region: 'sea|all',             tag: '橱窗号',  price: 68,   stock: 80,  description: '菲律宾区千粉橱窗号。' },
+  { id: 38,  title: '马来西亚-满月白号',         region: 'sea|all',             tag: '邮箱号',  price: 9,    stock: 300, description: '马来西亚区满月号，适合马来西亚及东南亚华人市场。' },
+  { id: 39,  title: '马来西亚-橱窗号',           region: 'sea|all',             tag: '橱窗号',  price: 75,   stock: 60,  description: '马来西亚区千粉橱窗号。' },
+  { id: 40,  title: '新加坡-满月白号',           region: 'sea|all',             tag: '邮箱号',  price: 15,   stock: 150, description: '新加坡区满月号，适合开通新加坡本土店铺。' },
+  { id: 41,  title: '缅甸-满月白号',            region: 'sea|all',             tag: '邮箱号',  price: 6,    stock: 200, description: '缅甸区满月号。' },
+  { id: 42,  title: '柬埔寨-满月白号',          region: 'sea|all',             tag: '邮箱号',  price: 6,    stock: 150, description: '柬埔寨区满月号。' },
+  { id: 43,  title: '老挝-满月白号',            region: 'sea|all',             tag: '邮箱号',  price: 6,    stock: 100, description: '老挝区满月号。' },
+
+  // ── 欧洲 ────────────────────────────────────────────────
+  { id: 50,  title: '德国-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 200, description: '德国区满月号，欧洲最大消费市场之一。' },
+  { id: 51,  title: '德国-橱窗号(1000粉)',       region: 'eu|all',              tag: '橱窗号',  price: 105,  stock: 40,  description: '德国区千粉橱窗号，适合德国TikTok Shop运营。' },
+  { id: 52,  title: '法国-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 180, description: '法国区满月号，适合法语区市场运营。' },
+  { id: 53,  title: '法国-橱窗号(1000粉)',       region: 'eu|all',              tag: '橱窗号',  price: 105,  stock: 35,  description: '法国区千粉橱窗号。' },
+  { id: 54,  title: '意大利-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 13,   stock: 180, description: '意大利区满月号。' },
+  { id: 55,  title: '西班牙-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 13,   stock: 200, description: '西班牙区满月号，适合西班牙及拉美西语市场。' },
+  { id: 56,  title: '荷兰-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 150, description: '荷兰区满月号。' },
+  { id: 57,  title: '比利时-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 13,   stock: 100, description: '比利时区满月号。' },
+  { id: 58,  title: '瑞典-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 120, description: '瑞典区满月号，适合北欧市场运营。' },
+  { id: 59,  title: '挪威-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 100, description: '挪威区满月号。' },
+  { id: 60,  title: '丹麦-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 100, description: '丹麦区满月号。' },
+  { id: 61,  title: '芬兰-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 13,   stock: 90,  description: '芬兰区满月号。' },
+  { id: 62,  title: '波兰-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 11,   stock: 150, description: '波兰区满月号，东欧最大市场。' },
+  { id: 63,  title: '捷克-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 11,   stock: 100, description: '捷克区满月号。' },
+  { id: 64,  title: '罗马尼亚-满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 10,   stock: 120, description: '罗马尼亚区满月号。' },
+  { id: 65,  title: '葡萄牙-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 12,   stock: 120, description: '葡萄牙区满月号，适合葡语区市场。' },
+  { id: 66,  title: '希腊-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 11,   stock: 100, description: '希腊区满月号。' },
+  { id: 67,  title: '匈牙利-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 10,   stock: 90,  description: '匈牙利区满月号。' },
+  { id: 68,  title: '奥地利-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 13,   stock: 100, description: '奥地利区满月号。' },
+  { id: 69,  title: '瑞士-满月白号',            region: 'eu|all',              tag: '邮箱号',  price: 15,   stock: 80,  description: '瑞士区满月号，高消费市场。' },
+  { id: 70,  title: '爱尔兰-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 80,  description: '爱尔兰区满月号。' },
+  { id: 71,  title: '土耳其-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 9,    stock: 200, description: '土耳其区满月号，亚欧大市场。' },
+  { id: 72,  title: '乌克兰-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 8,    stock: 150, description: '乌克兰区满月号。' },
+  { id: 73,  title: '俄罗斯-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 9,    stock: 200, description: '俄罗斯区满月号。' },
+  { id: 74,  title: '克罗地亚-满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 10,   stock: 80,  description: '克罗地亚区满月号。' },
+  { id: 75,  title: '塞尔维亚-满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 9,    stock: 80,  description: '塞尔维亚区满月号。' },
+  { id: 76,  title: '斯洛伐克-满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 10,   stock: 80,  description: '斯洛伐克区满月号。' },
+  { id: 77,  title: '保加利亚-满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 9,    stock: 90,  description: '保加利亚区满月号。' },
+  { id: 78,  title: '立陶宛-满月白号',           region: 'eu|all',              tag: '邮箱号',  price: 10,   stock: 70,  description: '立陶宛区满月号。' },
+  { id: 79,  title: '拉脱维亚-满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 10,   stock: 70,  description: '拉脱维亚区满月号。' },
+  { id: 80,  title: '爱沙尼亚-满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 10,   stock: 70,  description: '爱沙尼亚区满月号。' },
+
+  // ── 中东 ────────────────────────────────────────────────
+  { id: 90,  title: '沙特阿拉伯-满月白号',       region: 'me|all',              tag: '邮箱号',  price: 18,   stock: 150, description: '沙特区满月号，中东最大市场，高客单价蓝海。' },
+  { id: 91,  title: '沙特阿拉伯-橱窗号',         region: 'me|all',              tag: '橱窗号',  price: 128,  stock: 30,  description: '沙特区千粉橱窗号，中东高端消费市场首选。' },
+  { id: 92,  title: '阿联酋-满月白号',           region: 'me|all',              tag: '邮箱号',  price: 18,   stock: 120, description: '阿联酋区满月号，迪拜消费市场高净值用户聚集。' },
+  { id: 93,  title: '阿联酋-橱窗号',             region: 'me|all',              tag: '橱窗号',  price: 128,  stock: 25,  description: '阿联酋区千粉橱窗号。' },
+  { id: 94,  title: '以色列-满月白号',           region: 'me|all',              tag: '邮箱号',  price: 16,   stock: 100, description: '以色列区满月号，高科技市场。' },
+  { id: 95,  title: '科威特-满月白号',           region: 'me|all',              tag: '邮箱号',  price: 16,   stock: 80,  description: '科威特区满月号，海湾富裕市场。' },
+  { id: 96,  title: '卡塔尔-满月白号',           region: 'me|all',              tag: '邮箱号',  price: 16,   stock: 80,  description: '卡塔尔区满月号。' },
+  { id: 97,  title: '巴林-满月白号',             region: 'me|all',              tag: '邮箱号',  price: 15,   stock: 70,  description: '巴林区满月号。' },
+  { id: 98,  title: '阿曼-满月白号',             region: 'me|all',              tag: '邮箱号',  price: 15,   stock: 80,  description: '阿曼区满月号。' },
+  { id: 99,  title: '约旦-满月白号',             region: 'me|all',              tag: '邮箱号',  price: 12,   stock: 100, description: '约旦区满月号。' },
+  { id: 100, title: '伊拉克-满月白号',           region: 'me|all',              tag: '邮箱号',  price: 11,   stock: 100, description: '伊拉克区满月号。' },
+  { id: 101, title: '埃及-满月白号',             region: 'me|af|all',           tag: '邮箱号',  price: 10,   stock: 200, description: '埃及区满月号，北非及中东重要市场。' },
+  { id: 102, title: '巴基斯坦-满月白号',         region: 'me|all',              tag: '邮箱号',  price: 8,    stock: 300, description: '巴基斯坦区满月号，南亚大市场。' },
+
+  // ── 拉丁美洲 ────────────────────────────────────────────
+  { id: 110, title: '巴西-满月白号',             region: 'la|all',              tag: '邮箱号',  price: 10,   stock: 300, description: '巴西区满月号，拉美最大市场，TikTok用户超1亿。' },
+  { id: 111, title: '巴西-橱窗号(1000粉)',        region: 'la|all',              tag: '橱窗号',  price: 80,   stock: 60,  description: '巴西区千粉橱窗号，适合巴西电商市场运营。' },
+  { id: 112, title: '墨西哥-满月白号',           region: 'la|all',              tag: '邮箱号',  price: 10,   stock: 250, description: '墨西哥区满月号，美通墨模式必备，拉美蓝海市场。' },
+  { id: 113, title: '墨西哥-橱窗号(1000粉)',      region: 'la|all',              tag: '橱窗号',  price: 80,   stock: 50,  description: '墨西哥区千粉橱窗号，适合美通墨跨境卖家。' },
+  { id: 114, title: '阿根廷-满月白号',           region: 'la|all',              tag: '邮箱号',  price: 9,    stock: 200, description: '阿根廷区满月号。' },
+  { id: 115, title: '哥伦比亚-满月白号',         region: 'la|all',              tag: '邮箱号',  price: 9,    stock: 180, description: '哥伦比亚区满月号，南美第三大市场。' },
+  { id: 116, title: '智利-满月白号',             region: 'la|all',              tag: '邮箱号',  price: 10,   stock: 150, description: '智利区满月号，南美最高人均消费市场之一。' },
+  { id: 117, title: '秘鲁-满月白号',             region: 'la|all',              tag: '邮箱号',  price: 8,    stock: 150, description: '秘鲁区满月号。' },
+  { id: 118, title: '委内瑞拉-满月白号',         region: 'la|all',              tag: '邮箱号',  price: 7,    stock: 150, description: '委内瑞拉区满月号。' },
+  { id: 119, title: '厄瓜多尔-满月白号',         region: 'la|all',              tag: '邮箱号',  price: 8,    stock: 120, description: '厄瓜多尔区满月号。' },
+  { id: 120, title: '玻利维亚-满月白号',         region: 'la|all',              tag: '邮箱号',  price: 7,    stock: 100, description: '玻利维亚区满月号。' },
+  { id: 121, title: '巴拉圭-满月白号',           region: 'la|all',              tag: '邮箱号',  price: 7,    stock: 100, description: '巴拉圭区满月号。' },
+  { id: 122, title: '乌拉圭-满月白号',           region: 'la|all',              tag: '邮箱号',  price: 9,    stock: 80,  description: '乌拉圭区满月号，南美高消费市场。' },
+  { id: 123, title: '巴拿马-满月白号',           region: 'la|all',              tag: '邮箱号',  price: 9,    stock: 80,  description: '巴拿马区满月号。' },
+  { id: 124, title: '哥斯达黎加-满月白号',       region: 'la|all',              tag: '邮箱号',  price: 9,    stock: 80,  description: '哥斯达黎加区满月号。' },
+  { id: 125, title: '危地马拉-满月白号',         region: 'la|all',              tag: '邮箱号',  price: 8,    stock: 100, description: '危地马拉区满月号，中美洲最大市场。' },
+  { id: 126, title: '多米尼加-满月白号',         region: 'la|all',              tag: '邮箱号',  price: 8,    stock: 80,  description: '多米尼加区满月号，加勒比重要市场。' },
+  { id: 127, title: '古巴-满月白号',             region: 'la|all',              tag: '邮箱号',  price: 8,    stock: 60,  description: '古巴区满月号。' },
+
+  // ── 非洲 ────────────────────────────────────────────────
+  { id: 130, title: '尼日利亚-满月白号',         region: 'af|all',              tag: '邮箱号',  price: 9,    stock: 200, description: '尼日利亚区满月号，非洲最大市场，TikTok快速增长。' },
+  { id: 131, title: '肯尼亚-满月白号',           region: 'af|all',              tag: '邮箱号',  price: 8,    stock: 150, description: '肯尼亚区满月号，东非最大经济体。' },
+  { id: 132, title: '南非-满月白号',             region: 'af|all',              tag: '邮箱号',  price: 10,   stock: 150, description: '南非区满月号，非洲最发达经济市场。' },
+  { id: 133, title: '南非-橱窗号(1000粉)',        region: 'af|all',              tag: '橱窗号',  price: 78,   stock: 30,  description: '南非区千粉橱窗号，南非TikTok市场首选。' },
+  { id: 134, title: '加纳-满月白号',             region: 'af|all',              tag: '邮箱号',  price: 8,    stock: 100, description: '加纳区满月号，西非稳定市场。' },
+  { id: 135, title: '坦桑尼亚-满月白号',         region: 'af|all',              tag: '邮箱号',  price: 7,    stock: 100, description: '坦桑尼亚区满月号。' },
+  { id: 136, title: '埃塞俄比亚-满月白号',       region: 'af|all',              tag: '邮箱号',  price: 7,    stock: 100, description: '埃塞俄比亚区满月号，非洲人口第二大国。' },
+  { id: 137, title: '喀麦隆-满月白号',           region: 'af|all',              tag: '邮箱号',  price: 7,    stock: 80,  description: '喀麦隆区满月号。' },
+  { id: 138, title: '塞内加尔-满月白号',         region: 'af|all',              tag: '邮箱号',  price: 7,    stock: 80,  description: '塞内加尔区满月号，西非法语区重要市场。' },
+  { id: 139, title: '科特迪瓦-满月白号',         region: 'af|all',              tag: '邮箱号',  price: 7,    stock: 80,  description: '科特迪瓦区满月号。' },
+  { id: 140, title: '摩洛哥-满月白号',           region: 'af|me|all',           tag: '邮箱号',  price: 9,    stock: 120, description: '摩洛哥区满月号，北非重要市场，连接欧非两洲。' },
+  { id: 141, title: '阿尔及利亚-满月白号',       region: 'af|all',              tag: '邮箱号',  price: 8,    stock: 100, description: '阿尔及利亚区满月号，北非第一大国。' },
+  { id: 142, title: '突尼斯-满月白号',           region: 'af|all',              tag: '邮箱号',  price: 8,    stock: 80,  description: '突尼斯区满月号。' },
+  { id: 143, title: '利比亚-满月白号',           region: 'af|all',              tag: '邮箱号',  price: 8,    stock: 60,  description: '利比亚区满月号。' },
+  { id: 144, title: '苏丹-满月白号',             region: 'af|all',              tag: '邮箱号',  price: 7,    stock: 60,  description: '苏丹区满月号。' },
+  { id: 145, title: '安哥拉-满月白号',           region: 'af|all',              tag: '邮箱号',  price: 7,    stock: 80,  description: '安哥拉区满月号，非洲重要产油国市场。' },
+  { id: 146, title: '莫桑比克-满月白号',         region: 'af|all',              tag: '邮箱号',  price: 6,    stock: 70,  description: '莫桑比克区满月号。' },
+  { id: 147, title: '赞比亚-满月白号',           region: 'af|all',              tag: '邮箱号',  price: 6,    stock: 60,  description: '赞比亚区满月号。' },
+  { id: 148, title: '津巴布韦-满月白号',         region: 'af|all',              tag: '邮箱号',  price: 6,    stock: 60,  description: '津巴布韦区满月号。' },
+  { id: 149, title: '乌干达-满月白号',           region: 'af|all',              tag: '邮箱号',  price: 6,    stock: 70,  description: '乌干达区满月号。' },
+  { id: 150, title: '卢旺达-满月白号',           region: 'af|all',              tag: '邮箱号',  price: 6,    stock: 60,  description: '卢旺达区满月号，东非新兴科技市场。' },
+
+  // ── 其他地区 ────────────────────────────────────────────
+  { id: 160, title: '澳大利亚-满月白号',         region: 'other|all',           tag: '邮箱号',  price: 15,   stock: 150, description: '澳洲区满月号，高消费英语市场，适合欧美类商品。' },
+  { id: 161, title: '澳大利亚-橱窗号',           region: 'other|all',           tag: '橱窗号',  price: 110,  stock: 30,  description: '澳洲区千粉橱窗号，澳洲TikTok市场增速强劲。' },
+  { id: 162, title: '加拿大-满月白号',           region: 'other|all',           tag: '邮箱号',  price: 14,   stock: 150, description: '加拿大区满月号，北美英语市场延伸。' },
+  { id: 163, title: '加拿大-橱窗号',             region: 'other|all',           tag: '橱窗号',  price: 105,  stock: 25,  description: '加拿大区千粉橱窗号。' },
+  { id: 164, title: '新西兰-满月白号',           region: 'other|all',           tag: '邮箱号',  price: 13,   stock: 100, description: '新西兰区满月号，英语高消费市场。' },
+  { id: 165, title: '日本-满月白号',             region: 'other|all',           tag: '邮箱号',  price: 18,   stock: 100, description: '日本区满月号，亚洲顶级消费市场。' },
+  { id: 166, title: '韩国-满月白号',             region: 'other|all',           tag: '邮箱号',  price: 16,   stock: 100, description: '韩国区满月号，亚洲流行文化输出地，高消费市场。' },
+  { id: 167, title: '印度-满月白号',             region: 'other|all',           tag: '邮箱号',  price: 8,    stock: 400, description: '印度区满月号，全球最大TikTok潜力市场之一。' },
+  { id: 168, title: '孟加拉国-满月白号',         region: 'other|all',           tag: '邮箱号',  price: 6,    stock: 200, description: '孟加拉区满月号，南亚新兴市场。' },
+  { id: 169, title: '斯里兰卡-满月白号',         region: 'other|all',           tag: '邮箱号',  price: 7,    stock: 150, description: '斯里兰卡区满月号。' },
+  { id: 170, title: '尼泊尔-满月白号',           region: 'other|all',           tag: '邮箱号',  price: 6,    stock: 120, description: '尼泊尔区满月号。' },
+  { id: 171, title: '哈萨克斯坦-满月白号',       region: 'other|all',           tag: '邮箱号',  price: 9,    stock: 100, description: '哈萨克斯坦区满月号，中亚最大经济体。' },
+  { id: 172, title: '阿塞拜疆-满月白号',         region: 'other|all',           tag: '邮箱号',  price: 9,    stock: 80,  description: '阿塞拜疆区满月号。' },
+  { id: 173, title: '乌兹别克斯坦-满月白号',     region: 'other|all',           tag: '邮箱号',  price: 8,    stock: 100, description: '乌兹别克斯坦区满月号，中亚人口最多国家。' },
+  { id: 174, title: '格鲁吉亚-满月白号',         region: 'other|all',           tag: '邮箱号',  price: 9,    stock: 80,  description: '格鲁吉亚区满月号。' },
+  { id: 175, title: '亚美尼亚-满月白号',         region: 'other|all',           tag: '邮箱号',  price: 9,    stock: 70,  description: '亚美尼亚区满月号。' },
+  { id: 176, title: '蒙古-满月白号',             region: 'other|all',           tag: '邮箱号',  price: 8,    stock: 80,  description: '蒙古区满月号。' },
+  { id: 177, title: '巴布亚新几内亚-满月白号',   region: 'other|all',           tag: '邮箱号',  price: 8,    stock: 60,  description: '巴布亚新几内亚区满月号，太平洋岛国市场。' },
+  { id: 178, title: '斐济-满月白号',             region: 'other|all',           tag: '邮箱号',  price: 8,    stock: 50,  description: '斐济区满月号。' },
 ];
 
 const accountInfoItems = [
@@ -92,7 +235,7 @@ export default function TikTokAccountMarketPage() {
   const [mode, setMode] = useState<Mode>('account');
 
   // 账号购买状态
-  const [selectedCategory, setSelectedCategory]   = useState('us');
+  const [selectedCategory, setSelectedCategory]   = useState('hot');
   const [selectedAccountId, setSelectedAccountId] = useState(1);
   const [quantity, setQuantity]                   = useState(1);
 
@@ -102,7 +245,11 @@ export default function TikTokAccountMarketPage() {
   const [links, setLinks]                         = useState('');
   const [socialQty, setSocialQty]                 = useState(1000);
 
-  const selectedAccount = accountTypes.find(a => a.id === selectedAccountId) || accountTypes[0];
+  // 按分类过滤账号（region 字段用 | 分隔多个分类标签）
+  const filteredAccountTypes = accountTypes.filter(a =>
+    a.region.split('|').includes(selectedCategory)
+  );
+  const selectedAccount = accountTypes.find(a => a.id === selectedAccountId) || filteredAccountTypes[0] || accountTypes[0];
   const currentServices = servicesByPlatform[selectedPlatform] || [];
   const selectedService = currentServices.find(s => s.id === selectedServiceId) || currentServices[0];
 
@@ -179,7 +326,12 @@ export default function TikTokAccountMarketPage() {
             {accountCategories.map(c => (
               <button
                 key={c.id}
-                onClick={() => { setMode('account'); setSelectedCategory(c.id); }}
+                onClick={() => {
+                  setMode('account');
+                  setSelectedCategory(c.id);
+                  const first = accountTypes.find(a => a.region.split('|').includes(c.id));
+                  if (first) setSelectedAccountId(first.id);
+                }}
                 className={`w-full flex items-center justify-between px-4 py-2 transition-all ${
                   mode === 'account' && selectedCategory === c.id
                     ? 'bg-[#eef4ff] text-[#1a56db]'
@@ -242,9 +394,9 @@ export default function TikTokAccountMarketPage() {
                       value={selectedAccountId}
                       onChange={e => setSelectedAccountId(Number(e.target.value))}
                     >
-                      {accountTypes.map(a => (
+                      {filteredAccountTypes.map(a => (
                         <option key={a.id} value={a.id}>
-                          {a.title} {a.price > 0 ? `- [库存: ${a.stock}]` : '- [联系客服]'}
+                          {a.title} {a.price > 0 ? `- ¥${a.price} [库存: ${a.stock}]` : '- [联系客服]'}
                         </option>
                       ))}
                     </select>
