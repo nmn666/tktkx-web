@@ -47,7 +47,7 @@ async function fetchJson(path: string, body: object, useToken = false): Promise<
 // ─── 自动获取/刷新 access_token ──────────────────────────────
 async function getAccessToken(): Promise<string> {
   if (cachedToken && Date.now() < tokenExpires) return cachedToken;
-  const data = await fetchJson('/v2/token', {}, false);
+  const data = await fetchJson('/v2/token', { account: 'dx5PISfaTGQ' }, false);
   if (data?.code === 0 && data?.data?.access_token) {
     cachedToken  = data.data.access_token;
     tokenExpires = Date.now() + 110 * 60 * 1000; // 提前10分钟过期
