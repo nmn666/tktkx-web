@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/authContext';
 import { motion } from 'framer-motion';
-import { getSupabaseClient } from '@/storage/database/supabase-client';
+import { supabase } from '@/storage/database/supabase-client';
 import {
   User,
   Phone,
@@ -124,7 +124,7 @@ export default function CoachingAdminPage() {
 
   const loadApplications = () => {
     try {
-      const client = getSupabaseClient();
+      
 
       client
         .from('coaching_applications')
@@ -149,7 +149,7 @@ export default function CoachingAdminPage() {
 
   const loadRegisteredUsers = () => {
     try {
-      const client = getSupabaseClient();
+      
 
       client
         .from('registered_users')
@@ -176,7 +176,7 @@ export default function CoachingAdminPage() {
 
   const handleDelete = (id: number) => {
     if (window.confirm('确定要删除这条申请记录吗？')) {
-      const client = getSupabaseClient();
+      
 
       client
         .from('coaching_applications')
@@ -196,7 +196,7 @@ export default function CoachingAdminPage() {
   };
 
   const handleStatusChange = (id: number, newStatus: 'pending' | 'approved' | 'rejected') => {
-    const client = getSupabaseClient();
+    
 
     client
       .from('coaching_applications')
@@ -717,7 +717,7 @@ export default function CoachingAdminPage() {
                             <button
                               onClick={() => {
                                 if (window.confirm('确定要删除该用户记录吗？')) {
-                                  const client = getSupabaseClient();
+                                  
 
                                   client
                                     .from('registered_users')
