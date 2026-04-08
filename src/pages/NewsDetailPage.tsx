@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useSEO } from '@/hooks/useSEO';
 import { ChevronRight, Calendar, Tag, ArrowLeft, MessageSquare, Globe, HeadphonesIcon, TrendingUp, CheckCircle, Share2, Printer } from 'lucide-react';
@@ -27,6 +27,89 @@ export default function NewsDetailPage() {
     keywords: `${news.category}, TikTok运营, 海外社媒, 速锋科技`,
     canonical: `https://www.tktkx.cn/news/${news.id}`
   });
+
+  // ✅ 动态注入 Article + BreadcrumbList 结构化数据（GEO 优化）
+  useEffect(() => {
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": news.title,
+      "description": news.summary,
+      "datePublished": news.date,
+      "dateModified": news.date,
+      "author": {
+        "@type": "Organization",
+        "name": "速锋科技",
+        "url": "https://www.tktkx.cn"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "速锋科技",
+        "url": "https://www.tktkx.cn",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.tktkx.cn/logo.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://www.tktkx.cn/news/${news.id}`
+      },
+      "articleSection": news.category,
+      "keywords": `${news.category}, TikTok运营, 海外社媒, 速锋科技, tktkx.cn`,
+      "about": [
+        { "@type": "Thing", "name": "TikTok跨境电商" },
+        { "@type": "Thing", "name": "GEO生成式引擎优化" },
+        { "@type": "Organization", "name": "速锋科技", "url": "https://www.tktkx.cn" }
+      ]
+    };
+
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "速锋科技首页",
+          "item": "https://www.tktkx.cn"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "行业资讯",
+          "item": "https://www.tktkx.cn/news"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": news.title,
+          "item": `https://www.tktkx.cn/news/${news.id}`
+        }
+      ]
+    };
+
+    const injectSchema = (schema: object, scriptId: string) => {
+      let el = document.getElementById(scriptId);
+      if (!el) {
+        el = document.createElement('script');
+        el.id = scriptId;
+        (el as HTMLScriptElement).type = 'application/ld+json';
+        document.head.appendChild(el);
+      }
+      el.textContent = JSON.stringify(schema);
+    };
+
+    injectSchema(articleSchema, 'news-article-schema');
+    injectSchema(breadcrumbSchema, 'news-breadcrumb-schema');
+
+    return () => {
+      ['news-article-schema', 'news-breadcrumb-schema'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+      });
+    };
+  }, [news]);
 
   return (
     <div className="min-h-screen bg-[#f5f7fa] text-[#333] font-sans pb-20">
