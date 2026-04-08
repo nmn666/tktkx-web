@@ -23,9 +23,11 @@ import NewsPage from "@/pages/NewsPage";
 import NewsDetailPage from "@/pages/NewsDetailPage";
 import AdminPage from "@/pages/AdminPage";
 import AuthProvider, { useAuth } from '@/contexts/authContext';
+import ChatBot from '@/components/ChatBot';
 
 function AppContent() {
   return (
+    <>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/tiktok-full-moon" element={<TikTokFullMoonPage />} />
@@ -51,6 +53,8 @@ function AppContent() {
       <Route path="/news/:id" element={<NewsDetailPage />} />
       <Route path="/admin" element={<AdminPage />} />
     </Routes>
+    <ChatBot />
+    </>
   );
 }
 
