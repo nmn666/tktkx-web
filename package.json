@@ -35,5 +35,8 @@
     "ts-check": "tsc -p tsconfig.json"
   },
   "type": "module",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=20.x"
+  }
 }
