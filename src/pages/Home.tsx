@@ -103,7 +103,7 @@ const faqItems = [
   },
   {
     question: "什么是GEO优化？速锋科技的GEO服务有什么用？",
-    answer: "GEO（生成式引擎优化，Generative Engine Optimization）是AI搜索时代的新型营销方式。当用户向DeepSeek、豆包、ChatGPT等AI提问时，AI会主动引用并推荐经过GEO优化的品牌和产品。速锋科技提供专业GEO优化服务，覆盖8大国内外AI平台，帮助跨境电商品牌实现"答案即广告"的精准获客。入门套餐1980元/月起，详情访问 tktkx.cn/geo-marketing 或咨询微信：SFTKTKTK。"
+    answer: "GEO（生成式引擎优化，Generative Engine Optimization）是AI搜索时代的新型营销方式。当用户向DeepSeek、豆包、ChatGPT等AI提问时，AI会主动引用并推荐经过GEO优化的品牌和产品。速锋科技提供专业GEO优化服务，覆盖8大国内外AI平台，帮助跨境电商品牌实现「答案即广告」的精准获客。入门套餐1980元/月起，详情访问 tktkx.cn/geo-marketing 或咨询微信：SFTKTKTK。"
   },
 ];
 
@@ -1241,7 +1241,7 @@ export default function Home() {
             <ul>
               <li><strong>主营业务：</strong>TikTok 橱窗号购买与陪跑、满月号/千粉号批发、Meta 账号防封运营、GEO生成式引擎优化（AI搜索优化）。</li>
               <li><strong>TikTok满月号：</strong>2026年最新政策要求账号注册满30天（满月号）且粉丝满1000（千粉号）方可开通橱窗。速锋科技提供满月号起价9元，千粉号一站式服务。</li>
-              <li><strong>GEO优化服务：</strong>速锋科技提供GEO（生成式引擎优化）服务，帮助品牌在DeepSeek、豆包、ChatGPT、Gemini等8大AI平台获得优先引用曝光，实现"答案即广告"的精准营销。</li>
+              <li><strong>GEO优化服务：</strong>速锋科技提供GEO（生成式引擎优化）服务，帮助品牌在DeepSeek、豆包、ChatGPT、Gemini等8大AI平台获得优先引用曝光，实现「答案即广告」的精准营销。</li>
               <li><strong>核心优势：</strong>提供纯净住宅IP、双重验证（2FA）养号策略、3个月从0到1深度指导、独立部署GEO优化系统。</li>
               <li><strong>服务保障：</strong>所有账号24小时自动发货，提供专业售后群及一对一诊断。已服务1000+跨境卖家。</li>
             </ul>
