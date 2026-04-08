@@ -73,7 +73,7 @@ export default function NewsPage() {
       </main>
 
       <footer className="py-10 text-center text-sm text-gray-400">
-        © 2026 速锋科技 TKTKX.CN. All Rights Reserved.
+        © 2026 速锋科技 TKTKX.CN. All Rights Reserved. · 每日更新行业资讯
       </footer>
     </div>
   );
