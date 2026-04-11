@@ -5,10 +5,10 @@ import { useSEO } from '@/hooks/useSEO';
 export default function TKShopWindowPage() {
   const navigate = useNavigate();
   useSEO({
-    title: 'TikTok橱窗号开通教程2026 | 速锋科技 - 橱窗开通条件·零基础教学',
-    description: '最新TikTok橱窗号开通条件详解（2026版）：注册满30天+粉丝≥1000。手把手教你0基础开通TikTok橱窗，快速审核、上架商品、开始带货变现。微信：SFTKTKTK',
+    title: 'TikTok橱窗号购买 & 开通教程2026 | 速锋科技 - 千粉成品号批发',
+    description: '最新TikTok橱窗号开通条件详解：注册满30天+粉丝≥1000。速锋科技提供已开通橱窗的千粉成品号购买，到手即可带货变现，省去养号烦恼。',
     canonical: 'https://www.tktkx.cn/tk-shop-window',
-    keywords: 'TikTok橱窗号开通,TikTok开橱窗,TikTok橱窗条件,TikTok橱窗怎么开,TikTok橱窗号,TikTok带货,TikTok Shop橱窗,开通橱窗教程,TikTok橱窗号开通条件',
+    keywords: 'TikTok橱窗号购买,TikTok开橱窗,TikTok橱窗条件,千粉成品号,TikTok橱窗号,TikTok带货账号,TikTok Shop橱窗批发',
   });
 
   return (

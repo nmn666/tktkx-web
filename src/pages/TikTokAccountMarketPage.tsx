@@ -263,9 +263,10 @@ export default function TikTokAccountMarketPage() {
   };
 
   useSEO({
-    title: 'TikTok账号市场 & 社媒增粉 | 速锋科技',
+    title: 'TikTok账号购买 | TK千粉/白号批发 - 24H自动发货 - 速锋科技',
     description: '专业TikTok账号购买平台，提供美区/英区满月白号、橱窗号（1000粉）、店铺开通，以及TikTok/Instagram/YouTube等平台增粉点赞服务。',
     canonical: 'https://www.tktkx.cn/tiktok-market',
+    keywords: 'TikTok账号购买,TK千粉,白号批发,24H自动发货,美区新号,英区满月号,橱窗号购买,TikTok成品号,2FA验证账号',
   });
 
   return (

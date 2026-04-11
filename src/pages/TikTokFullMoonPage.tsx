@@ -5,10 +5,10 @@ import { useSEO } from '@/hooks/useSEO';
 export default function TikTokFullMoonPage() {
   const navigate = useNavigate();
   useSEO({
-    title: 'TikTok满月号购买 | 速锋科技 - 注册满30天·快速开橱窗·安全稳定',
-    description: '购买TikTok满月号，账号注册满30天，可快速开通TikTok橱窗和联盟带货。速锋科技提供安全稳定的TikTok满月号，支持批量，附赠开橱窗指导。微信：SFTKTKTK',
+    title: 'TikTok满月号购买 | 高权重满月老号批发 - 24H自动发货 - 速锋科技',
+    description: '购买TikTok满月号，账号注册满30天，权重稳定，支持2FA加强验证。速锋科技提供安全稳定的海外满月老号，支持批量，助力快速开通橱窗。',
     canonical: 'https://www.tktkx.cn/tiktok-full-moon',
-    keywords: 'TikTok满月号,TikTok满月号购买,TikTok满月号批发,TikTok满月账号,TikTok30天账号,TikTok橱窗号,开通橱窗,TikTok带货账号',
+    keywords: 'TikTok满月号,TikTok满月号购买,高权重满月号,满月老号批发,TikTok30天账号,2FA验证账号,TikTok账号购买',
   });
 
   return (

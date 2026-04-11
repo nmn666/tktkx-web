@@ -290,10 +290,10 @@ export default function Home() {
   const statsRef = useRef<HTMLDivElement>(null);
 
   useSEO({
-    title: '速锋科技 | TikTok橱窗号购买·满月号·陪跑·GEO优化·AI搜索营销',
+    title: 'TikTok账号购买 | TK千粉/白号批发平台 - 24H自动发货 - 速锋科技',
     description: '速锋科技专业TikTok橱窗号购买与陪跑服务，已帮助1000+用户成功变现。提供满月号/千粉号批发、Meta账号教程、GEO生成式引擎优化（让品牌在DeepSeek/ChatGPT中被主动推荐）。微信：SFTKTKTK，Telegram：@TRXBGB',
     canonical: 'https://www.tktkx.cn/',
-    keywords: 'TikTok橱窗号,TikTok满月号,TikTok千粉号,TikTok陪跑,GEO优化,AI搜索优化,生成式引擎优化,DeepSeek优化,跨境电商,速锋科技',
+    keywords: 'TikTok账号购买,TK千粉,白号批发,24H自动发货,TikTok橱窗号,TikTok满月号,TikTok千粉号,TikTok陪跑,美区纯净号,英区满月号,TikTok成品号,速锋科技',
   });
 
   // 轮播照片自动切换
