@@ -279,6 +279,7 @@ function StatCounter({ target, suffix, label, unit, visible }: {
   );
 }
 
+// Force rebuild 2026-04-11 - Refreshing news data cache
 export default function Home() {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
