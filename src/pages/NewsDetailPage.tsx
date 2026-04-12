@@ -150,8 +150,51 @@ export default function NewsDetailPage() {
               摘要：{news.summary}
             </div>
 
-            <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6 whitespace-pre-wrap">
-              {news.content}
+            <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-5">
+              {news.content
+                .split(/\n\n|\n(?=【)/)
+                .filter(p => p.trim())
+                .map((paragraph, idx) => {
+                  const trimmed = paragraph.trim();
+                  // 【小标题】段落
+                  if (trimmed.startsWith('【') && trimmed.includes('】')) {
+                    const bracketEnd = trimmed.indexOf('】');
+                    const heading = trimmed.slice(1, bracketEnd);
+                    const rest = trimmed.slice(bracketEnd + 1).trim();
+                    return (
+                      <div key={idx}>
+                        <h3 className="text-base font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg inline-block mb-2">
+                          {heading}
+                        </h3>
+                        {rest && <p className="text-gray-700 leading-8 whitespace-pre-wrap">{rest}</p>}
+                      </div>
+                    );
+                  }
+                  // 普通段落，但内部包含【】标记的拆分
+                  if (trimmed.includes('【') && trimmed.includes('】')) {
+                    const parts = trimmed.split(/(【[^】]+】)/g);
+                    return (
+                      <p key={idx} className="text-gray-700 leading-8">
+                        {parts.map((part, i) => {
+                          if (part.startsWith('【') && part.endsWith('】')) {
+                            return (
+                              <strong key={i} className="text-blue-700 font-bold">
+                                {part}
+                              </strong>
+                            );
+                          }
+                          return <span key={i}>{part}</span>;
+                        })}
+                      </p>
+                    );
+                  }
+                  // 普通段落
+                  return (
+                    <p key={idx} className="text-gray-700 leading-8 whitespace-pre-wrap">
+                      {trimmed}
+                    </p>
+                  );
+                })}
             </div>
 
             <div className="mt-16 pt-10 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
