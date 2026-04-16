@@ -1,116 +1,243 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- 首页 - 最高优先级 -->
   <url>
     <loc>https://www.tktkx.cn/</loc>
-    <lastmod>2026-04-07</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- TikTok账号市场 - 核心商业页面 -->
   <url>
     <loc>https://www.tktkx.cn/tiktok-market</loc>
-    <lastmod>2026-04-07</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
-
-  <!-- GEO营销 - AI搜索优化核心页 -->
   <url>
     <loc>https://www.tktkx.cn/geo-marketing</loc>
-    <lastmod>2026-04-07</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.92</priority>
   </url>
-
-  <!-- TikTok橱窗号开通教程 -->
   <url>
     <loc>https://www.tktkx.cn/tk-shop-window</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
-
-  <!-- TikTok满月号 -->
   <url>
     <loc>https://www.tktkx.cn/tiktok-full-moon</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
-
-  <!-- Meta账号教程 -->
   <url>
     <loc>https://www.tktkx.cn/meta-account-guide</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
-
-  <!-- 行业资讯 -->
   <url>
     <loc>https://www.tktkx.cn/news</loc>
-    <lastmod>2026-04-07</lastmod>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>
-
-  <!-- 成功案例 -->
   <url>
     <loc>https://www.tktkx.cn/success-cases</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
-
-  <!-- TikTok注册教程 -->
   <url>
     <loc>https://www.tktkx.cn/tiktok-register</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
-
-  <!-- 视频带货 -->
   <url>
     <loc>https://www.tktkx.cn/video-commerce</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
-
-  <!-- 账号购买FAQ -->
   <url>
     <loc>https://www.tktkx.cn/tk-account-purchase</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>
   </url>
-
-  <!-- 陪跑申请 -->
   <url>
     <loc>https://www.tktkx.cn/coaching-application</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
   </url>
-
-  <!-- 服务条款 -->
   <url>
     <loc>https://www.tktkx.cn/terms-of-service</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
-
-  <!-- 隐私政策 -->
   <url>
     <loc>https://www.tktkx.cn/privacy-policy</loc>
     <lastmod>2026-04-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
-
+  <url>
+    <loc>https://www.tktkx.cn/news/20260416-1</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260416-2</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260416-3</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260416-4</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260416-5</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260416-6</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260415-3</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260415-4</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260415-5</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260415-6</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260415-7</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260415-8</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260415-1</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260415-2</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260414-1</loc>
+    <lastmod>2026-04-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260414-2</loc>
+    <lastmod>2026-04-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260414-3</loc>
+    <lastmod>2026-04-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260414-4</loc>
+    <lastmod>2026-04-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260413-1</loc>
+    <lastmod>2026-04-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260413-2</loc>
+    <lastmod>2026-04-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260412-1</loc>
+    <lastmod>2026-04-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260412-2</loc>
+    <lastmod>2026-04-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260411-1</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260411-2</loc>
+    <lastmod>2026-04-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260410-1</loc>
+    <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260410-2</loc>
+    <lastmod>2026-04-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
 </urlset>
