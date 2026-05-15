@@ -253,6 +253,47 @@ export default function TikTokAccountMarketPage() {
   const currentServices = servicesByPlatform[selectedPlatform] || [];
   const selectedService = currentServices.find(s => s.id === selectedServiceId) || currentServices[0];
 
+  // ✅ GEO 优化：结构化数据定义
+  const MARKET_SCHEMA = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "name": "TikTok 满月白号 / 千粉橱窗号",
+        "description": "专业TikTok运营账号，包含注册满30天的权重满月号及自带1000+粉丝的橱窗开通号。24小时自动发货，安全稳定。",
+        "brand": { "@type": "Brand", "name": "速锋科技" },
+        "offers": {
+          "@type": "AggregateOffer",
+          "lowPrice": "9",
+          "highPrice": "280",
+          "priceCurrency": "CNY",
+          "offerCount": "50"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "购买后的TikTok账号多久发货？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "速锋科技提供24小时自动发货服务。下单并支付成功后，系统会立即将账号信息发送至您的注册邮箱或在订单详情页直接查看。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "满月号和千粉号有什么区别？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "满月号是注册时间超过30天的账号，具有更高的权重和稳定性，适合新手养号。千粉号则是粉丝数超过1000的账号，可以直接开通TikTok橱窗功能进行带货。"
+            }
+          }
+        ]
+      }
+    ]
+  };
+
   const handlePlatformChange = (id: string) => {
     setSelectedPlatform(id);
     const services = servicesByPlatform[id] || [];
@@ -268,6 +309,23 @@ export default function TikTokAccountMarketPage() {
     canonical: 'https://www.tktkx.cn/tiktok-market',
     keywords: 'TikTok账号购买,TK千粉,白号批发,24H自动发货,美区新号,英区满月号,橱窗号购买,TikTok成品号,2FA验证账号',
   });
+
+  // ✅ 动态注入结构化数据
+  React.useEffect(() => {
+    const scriptId = 'market-jsonld';
+    let el = document.getElementById(scriptId);
+    if (!el) {
+      el = document.createElement('script');
+      el.id = scriptId;
+      (el as HTMLScriptElement).type = 'application/ld+json';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(MARKET_SCHEMA);
+    return () => {
+      const existing = document.getElementById(scriptId);
+      if (existing) existing.remove();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f5f7fa] text-[#333] font-sans">
