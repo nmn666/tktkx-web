@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/authContext';
 import { useSEO } from '@/hooks/useSEO';
 import {
@@ -16,20 +16,28 @@ import {
   Info,
   CheckCircle2,
   AlertTriangle,
+  Menu,
+  X,
+  CreditCard,
+  ShoppingCart,
+  LayoutDashboard,
+  LogOut,
+  User,
+  ArrowRight
 } from 'lucide-react';
 
 // ─── 账号购买数据 ───────────────────────────────────────────
 const accountCategories = [
-  { id: 'all',        name: '全部账号',       icon: '🌐' },
   { id: 'hot',        name: '热销爆款',       icon: '🔥' },
-  { id: 'full-moon',  name: '满月号/千粉号',  icon: '🌕' },
+  { id: 'full-moon',  name: '满月/千粉',      icon: '🌕' },
   { id: 'us',         name: '美国区',         icon: '🇺🇸' },
   { id: 'uk',         name: '英国区',         icon: '🇬🇧' },
-  { id: 'sea',        name: '东南亚区',       icon: '🌏' },
+  { id: 'sea',        name: '东南亚',         icon: '🌏' },
   { id: 'eu',         name: '欧洲区',         icon: '🇪🇺' },
   { id: 'me',         name: '中东区',         icon: '🌙' },
-  { id: 'ads',        name: '广告/企业号',     icon: '📊' },
-  { id: 'high-fan',   name: '高粉/基金号',    icon: '📈' },
+  { id: 'ads',        name: '广告/企业',      icon: '📊' },
+  { id: 'high-fan',   name: '高粉/基金',      icon: '📈' },
+  { id: 'all',        name: '全部账号',       icon: '🌐' },
 ];
 
 const accountTypes = [
@@ -54,14 +62,10 @@ const accountTypes = [
   { id: 31,  title: '泰国-橱窗号 (1000粉)',      region: 'sea|all',             tag: '橱窗号',  price: 72,   stock: 90,  description: '泰区千粉号，支持直接开通小黄车带货，东南亚热门电商市场首选。' },
   { id: 36,  title: '马来西亚-满月白号',         region: 'sea|all',             tag: '邮箱号',  price: 9,    stock: 300, description: '马区注册满30天，权重稳定，适合马区电商运营起号。' },
   { id: 37,  title: '马来西亚-橱窗号',           region: 'sea|all',             tag: '橱窗号',  price: 82,   stock: 50,  description: '马区千粉号，支持开通橱窗带货，粉丝活跃。' },
-  { id: 38,  title: '菲律宾-满月白号',           region: 'sea|all',             tag: '邮箱号',  price: 7,    stock: 250, description: '菲区满月号，适合菲区内容获客。' },
-  { id: 39,  title: '菲律宾-橱窗号',             region: 'sea|all',             tag: '橱窗号',  price: 75,   stock: 40,  description: '菲区千粉号，适合东南亚跨境电商运营。' },
 
   // ── 欧洲区 (EU) ────────────────────────────────────────
   { id: 50,  title: '德国-权重满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 120, description: '德区权重满月号，适合针对高净值德语用户进行内容创作。' },
   { id: 51,  title: '法国-权重满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 130, description: '法区权重满月号，适合时尚、美妆等品类在法国市场的推广。' },
-  { id: 52,  title: '意大利-权重满月白号',       region: 'eu|all',              tag: '邮箱号',  price: 13,   stock: 110, description: '意区权重满月号。' },
-  { id: 53,  title: '西班牙-权重满月白号',       region: 'eu|all',              tag: '邮箱号',  price: 12,   stock: 100, description: '西区权重满月号。' },
 
   // ── 中东区 (ME) ────────────────────────────────────────
   { id: 90,  title: '沙特-权重满月白号',         region: 'me|all',              tag: '邮箱号',  price: 18,   stock: 150, description: '沙特区权重号，中东土豪金区，流量价值极高。' },
@@ -69,7 +73,6 @@ const accountTypes = [
 
   // ── 特色账号 ──────────────────────────────────────────
   { id: 180, title: 'TikTok 1万粉 (创作基金号)',  region: 'high-fan|all',         tag: '基金号',  price: 850,  stock: 10,  description: '【旗舰精品】自带1万真实粉丝，已成功开通Creator Fund，视频播放即可产生美金收益。' },
-  { id: 181, title: 'TikTok 1万粉 (无基金纯粉)',  region: 'high-fan|all',         tag: '高粉号',  price: 580,  stock: 15,  description: '自带1万粉丝，无违规，适合作为品牌主号或快速起号的中转号。' },
 ];
 
 const accountInfoItems = [
@@ -86,7 +89,6 @@ const socialPlatforms = [
   { id: 'facebook',  name: 'Facebook',  emoji: '👤' },
   { id: 'youtube',   name: 'YouTube',   emoji: '▶️' },
   { id: 'twitter',   name: 'Twitter/X', emoji: '🐦' },
-  { id: 'telegram',  name: '电报',      emoji: '✈️' },
 ];
 
 const servicesByPlatform: Record<string, { id: number; name: string; price: number; min: number; max: number }[]> = {
@@ -94,7 +96,6 @@ const servicesByPlatform: Record<string, { id: number; name: string; price: numb
     { id: 4858, name: 'TikTok 粉丝 | 真实头像粉 | 极速启动', price: 12.87, min: 100, max: 100000 },
     { id: 4859, name: 'TikTok 点赞 | 真人交互 | 稳定不掉', price: 3.5,   min: 100, max: 50000  },
     { id: 4860, name: 'TikTok 播放量 | 万次起刷 | 提升权重', price: 0.12,  min: 1000, max: 5000000 },
-    { id: 4861, name: 'TikTok 分享/收藏 | 触发推荐机制', price: 2.5,   min: 100, max: 10000 },
   ],
   instagram: [
     { id: 5001, name: 'Instagram 粉丝 | 全球真人粉', price: 18.5, min: 100, max: 50000 },
@@ -105,22 +106,22 @@ const servicesByPlatform: Record<string, { id: number; name: string; price: numb
   ],
   youtube: [
     { id: 7001, name: 'YouTube 订阅 | 稳定真人订阅', price: 28.0, min: 100, max: 20000 },
-    { id: 7002, name: 'YouTube 播放量 | 提升搜索排名', price: 2.5,  min: 500, max: 1000000 },
   ],
   twitter:   [{ id: 8001,  name: 'Twitter(X) 粉丝 | 精准账号关注', price: 20.0, min: 100, max: 50000 }],
-  telegram:  [{ id: 9001,  name: 'Telegram 频道/群组成员', price: 15.0, min: 100, max: 100000 }],
 };
 
 const socialInfoItems = [
   { Icon: Clock,       label: '1-3小时', desc: '平均启动' },
-  { Icon: ShieldCheck, label: '售后补偿', desc: '掉粉包补' },
-  { Icon: TrendingUp,  label: '拟人增长', desc: '安全策略' },
+  { Icon: ShieldCheck, label: '包补机制', desc: '掉粉包补' },
   { Icon: Zap,         label: '24/7',    desc: '全天运行' },
+  { Icon: Globe,       label: '全球',    desc: '用户覆盖' },
 ];
 
 type Mode = 'account' | 'social';
 
 export default function TikTokAccountMarketPage() {
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
   const [mode, setMode] = useState<Mode>('account');
   const [selectedCategory, setSelectedCategory]   = useState('hot');
   const [selectedAccountId, setSelectedAccountId] = useState(1);
@@ -128,6 +129,49 @@ export default function TikTokAccountMarketPage() {
   const [selectedPlatform, setSelectedPlatform]   = useState('tiktok');
   const [selectedServiceId, setSelectedServiceId] = useState(4858);
   const [socialQty, setSocialQty]                 = useState(1000);
+  const [isMenuOpen, setIsMenuOpen]               = useState(false);
+
+  // GEO 优化：结构化数据
+  const MARKET_SCHEMA = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "name": "TikTok 满月白号 / 千粉橱窗号",
+        "description": "专业TikTok运营账号，包含注册满30天的权重满月号及自带1000+粉丝的橱窗开通号。24小时自动发货，安全稳定。",
+        "brand": { "@type": "Brand", "name": "速锋科技" },
+        "offers": {
+          "@type": "AggregateOffer",
+          "lowPrice": "9",
+          "highPrice": "850",
+          "priceCurrency": "CNY"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "购买后的TikTok账号多久发货？",
+            "acceptedAnswer": { "@type": "Answer", "text": "速锋科技提供24小时自动发货服务。下单成功后立即发送至注册邮箱。" }
+          }
+        ]
+      }
+    ]
+  };
+
+  useEffect(() => {
+    const scriptId = 'market-jsonld';
+    let el = document.getElementById(scriptId);
+    if (!el) {
+      el = document.createElement('script');
+      el.id = scriptId;
+      (el as HTMLScriptElement).type = 'application/ld+json';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(MARKET_SCHEMA);
+    return () => { document.getElementById(scriptId)?.remove(); };
+  }, []);
 
   const filteredAccountTypes = useMemo(() => 
     accountTypes.filter(a => a.region.split('|').includes(selectedCategory)),
@@ -163,347 +207,260 @@ export default function TikTokAccountMarketPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9fb] text-[#333] font-sans pb-20">
+    <div className="min-h-screen bg-[#f8f9fb] text-[#333] font-sans pb-32 md:pb-20">
+      {/* ── 手机端底部粘性结算条 ── */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 p-4 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] flex items-center justify-between">
+        <div>
+          <p className="text-[10px] text-gray-400 font-bold uppercase">总计费用</p>
+          <p className="text-2xl font-black text-blue-600">¥ {totalPrice.toFixed(2)}</p>
+        </div>
+        <button className="bg-blue-600 text-white px-8 py-3.5 rounded-xl font-black text-sm flex items-center shadow-lg shadow-blue-100 active:scale-95 transition-transform">
+          立即购买 <ChevronRight className="h-4 w-4 ml-1" />
+        </button>
+      </div>
+
       {/* ── Header ── */}
-      <header className="bg-white border-b border-[#eef1f6] py-3 px-6 sticky top-0 z-50 shadow-sm">
+      <header className="bg-white border-b border-[#eef1f6] py-3 px-4 md:px-6 sticky top-0 z-[60] shadow-sm">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link to="/" className="flex items-center space-x-2">
-              <span className="text-2xl font-black text-[#1a56db] tracking-tighter">速锋科技</span>
+          <div className="flex items-center space-x-3">
+            <button 
+              className="md:hidden p-1.5 text-gray-500"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+            <Link to="/" className="flex items-center">
+              <span className="text-xl md:text-2xl font-black text-[#1a56db] tracking-tighter">速锋科技</span>
             </Link>
-            <div className="hidden sm:block h-4 w-px bg-gray-200" />
-            <div className="hidden sm:flex items-center text-[#1a56db] text-[12px] font-bold">
-              <ShieldCheck className="h-3 w-3 mr-1" /> TikTok跨境出海一级市场
-            </div>
           </div>
-          <div className="flex items-center space-x-4 text-xs">
+
+          <div className="flex items-center space-x-3">
             <a
               href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#1a56db] hover:bg-[#1e429f] text-white rounded-lg px-5 py-2 flex items-center shadow-md transition-all font-bold"
+              className="hidden sm:flex bg-[#1a56db] hover:bg-[#1e429f] text-white rounded-lg px-5 py-2 items-center shadow-md transition-all text-xs font-bold"
             >
-              <MessageSquare className="h-4 w-4 mr-2" /> 官方客服 (微信)
+              <MessageSquare className="h-4 w-4 mr-2" /> 官方客服
             </a>
+            <div className="h-6 w-px bg-gray-200 hidden sm:block" />
+            {!isAuthenticated ? (
+              <Link to="/login" className="text-sm font-bold text-gray-600 hover:text-blue-600 px-2 py-1 transition-colors">登录</Link>
+            ) : (
+              <button onClick={logout} className="p-2 text-gray-500 hover:text-red-500 transition-colors"><LogOut className="h-5 w-5" /></button>
+            )}
+          </div>
+        </div>
+
+        {/* ── 手机端侧边菜单 ── */}
+        <div className={`md:hidden fixed inset-0 top-[57px] bg-white z-[55] transition-all duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="p-6 space-y-6">
+            <div className="space-y-2">
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">主要导航</p>
+              <Link to="/" className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700" onClick={() => setIsMenuOpen(false)}><Globe className="h-5 w-5 mr-3 text-blue-500" /> 首页</Link>
+              <Link to="/news" className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700" onClick={() => setIsMenuOpen(false)}><Bell className="h-5 w-5 mr-3 text-pink-500" /> 行业资讯</Link>
+              <Link to="/geo-marketing" className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700" onClick={() => setIsMenuOpen(false)}><Zap className="h-5 w-5 mr-3 text-purple-500" /> GEO优化</Link>
+            </div>
+            <div className="pt-6 border-t border-gray-100">
+               <a href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d" className="flex items-center p-4 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-100 font-bold justify-center">
+                  <MessageSquare className="h-5 w-5 mr-2" /> 联系官方微信客服
+               </a>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-[1200px] mx-auto py-6 px-4">
-        {/* ── 公告栏 ── */}
-        <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-center text-[13px]">
-            <Volume2 className="h-5 w-5 text-blue-500 mr-3 flex-shrink-0 animate-pulse" />
-            <p className="text-blue-900 font-medium">
-              <span className="font-black mr-2">【公告】</span> 
-              所有账号均为24小时自动发货。下单后请查看注册邮箱或订单详情。
-            </p>
-          </div>
-          <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 flex items-center text-[13px]">
-            <Bell className="h-5 w-5 text-amber-500 mr-3 flex-shrink-0" />
-            <p className="text-amber-900 font-medium">
-              <span className="font-black mr-2">【通知】</span> 
-              新购账号建议使用目标国家原生独立IP，切勿频繁切换IP，以免触发风控。
-            </p>
+      <main className="max-w-[1200px] mx-auto py-4 md:py-6 px-4">
+        {/* ── 业务切换 (手机端优化为圆角卡片) ── */}
+        <div className="flex bg-white p-1.5 rounded-2xl border border-gray-100 mb-6 shadow-sm">
+          <button 
+            onClick={() => setMode('account')}
+            className={`flex-1 py-3.5 rounded-xl font-black text-sm flex items-center justify-center transition-all ${mode === 'account' ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'text-gray-500 hover:bg-gray-50'}`}
+          >
+            <Globe className="h-4 w-4 mr-2" /> 账号市场
+          </button>
+          <button 
+            onClick={() => setMode('social')}
+            className={`flex-1 py-3.5 rounded-xl font-black text-sm flex items-center justify-center transition-all ${mode === 'social' ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'text-gray-500 hover:bg-gray-50'}`}
+          >
+            <TrendingUp className="h-4 w-4 mr-2" /> 增粉服务
+          </button>
+        </div>
+
+        {/* ── 核心分类 (手机端改为横向滚动) ── */}
+        <div className="mb-6">
+          <div className="flex overflow-x-auto no-scrollbar pb-2 gap-2 -mx-4 px-4 scroll-smooth">
+            {(mode === 'account' ? accountCategories : socialPlatforms).map((item) => {
+              const isActive = mode === 'account' ? selectedCategory === item.id : selectedPlatform === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => mode === 'account' ? setSelectedCategory(item.id) : handlePlatformChange(item.id)}
+                  className={`flex-shrink-0 px-5 py-2.5 rounded-full text-xs font-black transition-all border whitespace-nowrap flex items-center ${
+                    isActive 
+                      ? 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm' 
+                      : 'bg-white text-gray-500 border-gray-100 hover:border-gray-200'
+                  }`}
+                >
+                  <span className="mr-1.5">{(item as any).icon || (item as any).emoji}</span>
+                  {item.name}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* ── 左侧边栏导航 ── */}
-          <aside className="w-full lg:w-56 space-y-2 self-start lg:sticky lg:top-[84px]">
-            <div className="bg-white rounded-xl border border-[#eef1f6] shadow-sm p-2 overflow-hidden">
-              <div className="px-3 py-2 text-[12px] font-bold text-gray-400 uppercase tracking-widest">业务板块</div>
-              <button
-                onClick={() => setMode('account')}
-                className={`w-full px-4 py-3 rounded-lg flex items-center transition-all ${
-                  mode === 'account' ? 'bg-[#1a56db] text-white shadow-lg' : 'text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                <Globe className="h-4 w-4 mr-3" />
-                <span className="text-[14px] font-bold">账号市场</span>
-              </button>
-              <button
-                onClick={() => setMode('social')}
-                className={`w-full px-4 py-3 rounded-lg flex items-center transition-all mt-1 ${
-                  mode === 'social' ? 'bg-[#1a56db] text-white shadow-lg' : 'text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                <TrendingUp className="h-4 w-4 mr-3" />
-                <span className="text-[14px] font-bold">增粉服务</span>
-              </button>
-            </div>
-
-            {mode === 'account' && (
-              <div className="bg-white rounded-xl border border-[#eef1f6] shadow-sm p-2">
-                <div className="px-3 py-2 text-[12px] font-bold text-gray-400 uppercase tracking-widest">账号地区分类</div>
-                {accountCategories.map(cat => (
-                  <button
-                    key={cat.id}
-                    onClick={() => {
-                      setSelectedCategory(cat.id);
-                      const filtered = accountTypes.filter(a => a.region.split('|').includes(cat.id));
-                      if (filtered.length > 0) setSelectedAccountId(filtered[0].id);
-                    }}
-                    className={`w-full px-4 py-2.5 rounded-lg flex items-center justify-between transition-all mt-0.5 ${
-                      selectedCategory === cat.id ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <span className="mr-3 text-base">{cat.icon}</span>
-                      <span className="text-[13px]">{cat.name}</span>
-                    </div>
-                    {selectedCategory === cat.id && <ChevronRight className="h-3 w-3" />}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {mode === 'social' && (
-              <div className="bg-white rounded-xl border border-[#eef1f6] shadow-sm p-2">
-                <div className="px-3 py-2 text-[12px] font-bold text-gray-400 uppercase tracking-widest">平台分类</div>
-                {socialPlatforms.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => handlePlatformChange(p.id)}
-                    className={`w-full px-4 py-2.5 rounded-lg flex items-center justify-between transition-all mt-0.5 ${
-                      selectedPlatform === p.id ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <span className="mr-3 text-base">{p.emoji}</span>
-                      <span className="text-[13px]">{p.name}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </aside>
-
-          {/* ── 中间主区域 ── */}
           <section className="flex-1 space-y-6">
-            <div className="bg-white rounded-2xl border border-[#eef1f6] shadow-sm overflow-hidden">
-              <div className="p-8">
-                <h2 className="text-xl font-black mb-6 flex items-center">
-                  {mode === 'account' ? (
-                    <><Globe className="h-5 w-5 mr-2 text-blue-600" /> 选购 TikTok 优质账号</>
-                  ) : (
-                    <><TrendingUp className="h-5 w-5 mr-2 text-blue-600" /> 配置增粉推广服务</>
-                  )}
-                </h2>
+            {/* ── 选购主卡片 ── */}
+            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="p-6 md:p-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  {/* 表单 */}
+                  <div className="space-y-8">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-[12px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                          {mode === 'account' ? '选择账号细分' : '选择服务项目'}
+                        </label>
+                        <select
+                          className="w-full bg-gray-50 border-2 border-transparent focus:border-blue-600/20 rounded-2xl px-5 py-4 text-sm font-bold outline-none transition-all appearance-none shadow-sm"
+                          value={mode === 'account' ? selectedAccountId : selectedServiceId}
+                          onChange={e => mode === 'account' ? setSelectedAccountId(Number(e.target.value)) : setSelectedServiceId(Number(e.target.value))}
+                          style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%23a1a1aa\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'org/19/9l7 7 7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundPosition: 'right 1rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.2rem' }}
+                        >
+                          {mode === 'account' ? (
+                            filteredAccountTypes.map(a => <option key={a.id} value={a.id}>{a.title} (¥{a.price})</option>)
+                          ) : (
+                            currentServices.map(s => <option key={s.id} value={s.id}>{s.name}</option>)
+                          )}
+                        </select>
+                      </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* 表单部分 */}
-                  <div className="space-y-6">
-                    {mode === 'account' ? (
-                      <>
+                      {mode === 'account' ? (
                         <div className="space-y-2">
-                          <label className="text-sm font-bold text-gray-700">账号类型</label>
-                          <select
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
-                            value={selectedAccountId}
-                            onChange={e => setSelectedAccountId(Number(e.target.value))}
-                          >
-                            {filteredAccountTypes.map(a => (
-                              <option key={a.id} value={a.id}>
-                                {a.title} {a.price > 0 ? `(¥${a.price})` : '(联系客服)'}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-bold text-gray-700">购买数量</label>
-                          <div className="flex items-center space-x-3">
-                            <button
-                              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                              className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-gray-200 text-xl font-bold"
-                            >-</button>
-                            <input
-                              type="number"
-                              value={quantity}
-                              onChange={e => setQuantity(Math.max(1, Number(e.target.value)))}
-                              className="w-20 bg-gray-50 border border-gray-200 rounded-xl py-3 text-center font-black text-blue-600 text-lg"
-                            />
-                            <button
-                              onClick={() => setQuantity(quantity + 1)}
-                              className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-gray-200 text-xl font-bold"
-                            >+</button>
+                          <label className="text-[12px] font-black text-gray-400 uppercase tracking-widest ml-1">购买数量</label>
+                          <div className="flex items-center bg-gray-50 rounded-2xl p-1 border border-gray-100">
+                            <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-14 h-14 rounded-xl flex items-center justify-center hover:bg-white hover:shadow-sm transition-all text-xl font-black text-gray-400 hover:text-blue-600">-</button>
+                            <input type="number" value={quantity} onChange={e => setQuantity(Math.max(1, Number(e.target.value)))} className="flex-1 bg-transparent text-center font-black text-blue-600 text-xl outline-none" />
+                            <button onClick={() => setQuantity(quantity + 1)} className="w-14 h-14 rounded-xl flex items-center justify-center hover:bg-white hover:shadow-sm transition-all text-xl font-black text-gray-400 hover:text-blue-600">+</button>
                           </div>
                         </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="space-y-2">
-                          <label className="text-sm font-bold text-gray-700">服务项目</label>
-                          <select
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
-                            value={selectedServiceId}
-                            onChange={e => setSelectedServiceId(Number(e.target.value))}
-                          >
-                            {currentServices.map(s => (
-                              <option key={s.id} value={s.id}>{s.name}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-bold text-gray-700">链接 / ID</label>
-                          <input
-                            placeholder="请输入作品链接或主页ID"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-bold text-gray-700 text-flex items-center justify-between flex">
-                            <span>下单数量</span>
-                            <span className="text-[11px] font-normal text-gray-400">最小: {selectedService?.min} / 最大: {selectedService?.max}</span>
-                          </label>
-                          <input
-                            type="number"
-                            value={socialQty}
-                            onChange={e => setSocialQty(Number(e.target.value))}
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-bold text-blue-600"
-                          />
-                        </div>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <div className="space-y-2">
+                            <label className="text-[12px] font-black text-gray-400 uppercase tracking-widest ml-1">投放链接</label>
+                            <input placeholder="请粘贴作品链接或主页ID" className="w-full bg-gray-50 border-2 border-transparent focus:border-blue-600/20 rounded-2xl px-5 py-4 text-sm font-bold outline-none transition-all shadow-sm" />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[12px] font-black text-gray-400 uppercase tracking-widest ml-1 flex justify-between">
+                              <span>下单数量</span>
+                              <span className="text-blue-500">{selectedService?.min} - {selectedService?.max}</span>
+                            </label>
+                            <input type="number" value={socialQty} onChange={e => setSocialQty(Number(e.target.value))} className="w-full bg-gray-50 border-2 border-transparent focus:border-blue-600/20 rounded-2xl px-5 py-4 text-sm font-black text-blue-600 outline-none transition-all shadow-sm" />
+                          </div>
+                        </>
+                      )}
+                    </div>
 
-                    <div className="pt-4 border-t border-gray-100">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-gray-500 font-medium">总计金额</span>
-                        <div className="text-right">
-                          <span className="text-3xl font-black text-blue-600">¥ {totalPrice.toFixed(2)}</span>
+                    <div className="hidden md:block pt-4">
+                      <div className="flex items-end justify-between mb-6">
+                        <div>
+                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">结算金额 (元)</p>
+                          <p className="text-4xl font-black text-blue-600">¥ {totalPrice.toFixed(2)}</p>
+                        </div>
+                        <div className="text-right text-gray-400 text-[11px] font-medium leading-tight">
+                          支付完成后<br />系统自动发货
                         </div>
                       </div>
-                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4 font-black text-lg shadow-lg shadow-blue-100 transition-all flex items-center justify-center">
-                        立即下单 <Zap className="h-5 w-5 ml-2 fill-current" />
+                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-2xl py-5 font-black text-lg shadow-xl shadow-blue-100 transition-all transform active:scale-[0.98] flex items-center justify-center">
+                        立即下单购买 <ArrowRight className="h-5 w-5 ml-2" />
                       </button>
-                      <p className="mt-4 text-[11px] text-gray-400 text-center">支付即视为同意《速锋科技服务协议》与《账号使用规范》</p>
                     </div>
                   </div>
 
-                  {/* 详情与参数部分 */}
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                    <h3 className="font-black text-gray-900 mb-4 flex items-center">
-                      <Info className="h-4 w-4 mr-2 text-blue-600" /> 
-                      {mode === 'account' ? '账号详情说明' : '服务参数详情'}
-                    </h3>
-                    
-                    {mode === 'account' ? (
-                      <div className="space-y-4">
-                        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                          <div className="text-[11px] font-bold text-blue-600 uppercase mb-1">{selectedAccount.tag}</div>
-                          <div className="text-lg font-black text-gray-900 mb-2">{selectedAccount.title}</div>
-                          <p className="text-sm text-gray-600 leading-relaxed">{selectedAccount.description}</p>
+                  {/* 详情卡片 */}
+                  <div className="space-y-6">
+                    <div className="bg-blue-600 rounded-[2.5rem] p-8 text-white relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                        <ShieldCheck className="h-24 w-24" />
+                      </div>
+                      <div className="relative z-10">
+                        <div className="flex items-center space-x-2 mb-4">
+                          <span className="bg-white/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                            {mode === 'account' ? selectedAccount.tag : '服务担保'}
+                          </span>
+                          <span className="flex items-center text-[10px] font-bold text-white/70">
+                            <CheckCircle2 className="h-3 w-3 mr-1" /> 已通过安全审计
+                          </span>
                         </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          {accountInfoItems.map((item, i) => (
-                            <div key={i} className="bg-white rounded-xl p-3 border border-gray-200 flex items-center">
-                              <item.Icon className="h-5 w-5 text-blue-500 mr-3" />
+                        <h3 className="text-2xl font-black mb-4 leading-tight">
+                          {mode === 'account' ? selectedAccount.title : selectedService?.name}
+                        </h3>
+                        <p className="text-sm text-blue-50/80 leading-relaxed mb-8">
+                          {mode === 'account' ? selectedAccount.description : '该服务由速锋科技自研拟人增长引擎驱动，支持 24 小时全自动化启动，掉粉包补，确保账号运营安全。'}
+                        </p>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          {(mode === 'account' ? accountInfoItems : socialInfoItems).map((item, i) => (
+                            <div key={i} className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex items-center">
+                              <item.Icon className="h-5 w-5 mr-3 text-white/80" />
                               <div>
-                                <div className="text-[10px] text-gray-400 font-bold">{item.desc}</div>
-                                <div className="text-xs font-black text-gray-800">{item.label}</div>
+                                <p className="text-[9px] text-white/50 font-black uppercase">{item.desc}</p>
+                                <p className="text-[11px] font-black">{item.label}</p>
                               </div>
                             </div>
                           ))}
                         </div>
                       </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                          <div className="text-lg font-black text-gray-900 mb-2">{selectedService?.name}</div>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-500">单位单价 (每千)</span>
-                            <span className="font-black text-blue-600">¥ {selectedService?.price.toFixed(2)}</span>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          {socialInfoItems.map((item, i) => (
-                            <div key={i} className="bg-white rounded-xl p-3 border border-gray-200 flex items-center">
-                              <item.Icon className="h-5 w-5 text-blue-500 mr-3" />
-                              <div>
-                                <div className="text-[10px] text-gray-400 font-bold">{item.desc}</div>
-                                <div className="text-xs font-black text-gray-800">{item.label}</div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    </div>
 
-                    <div className="mt-6 p-4 bg-blue-600/5 border border-blue-600/10 rounded-xl">
-                      <h4 className="text-[12px] font-black text-blue-700 mb-2 flex items-center">
-                        <ShieldCheck className="h-3 w-3 mr-1.5" /> 质量与安全承诺
-                      </h4>
-                      <ul className="text-[11px] text-blue-600/80 space-y-1.5">
-                        <li className="flex items-center"><CheckCircle2 className="h-3 w-3 mr-2" /> 账号均为2FA加密验证，防盗性极强</li>
-                        <li className="flex items-center"><CheckCircle2 className="h-3 w-3 mr-2" /> 100% 模拟真实用户手机注册环境</li>
-                        <li className="flex items-center"><CheckCircle2 className="h-3 w-3 mr-2" /> 售后24小时内封禁无理由包换</li>
-                      </ul>
+                    <div className="bg-white rounded-3xl p-6 border-2 border-gray-50 flex items-center gap-5">
+                       <div className="bg-green-50 p-4 rounded-2xl text-green-600">
+                          <MessageSquare className="h-8 w-8" />
+                       </div>
+                       <div className="flex-1">
+                          <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">联系客服处理异常</p>
+                          <p className="text-sm font-black text-gray-800">WeChat: SFTKTKTK</p>
+                       </div>
+                       <ChevronRight className="h-5 w-5 text-gray-300" />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* ── 账号使用规范 ── */}
-            <div className="bg-white rounded-2xl border border-[#eef1f6] shadow-sm p-8">
-              <h3 className="text-lg font-black mb-6 flex items-center">
-                <AlertTriangle className="h-5 w-5 mr-2 text-amber-500" /> 账号使用安全指南 (新手必读)
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-3">
-                  <div className="h-10 w-10 bg-amber-50 rounded-full flex items-center justify-center text-amber-600 font-bold">1</div>
-                  <h4 className="font-black text-sm">IP与网络环境</h4>
-                  <p className="text-xs text-gray-500 leading-relaxed">必须使用账号所属国家的“原生住宅IP”。切勿使用市面低质公用梯子，多人共用IP极易导致账号封禁或0播放。</p>
-                </div>
-                <div className="space-y-3">
-                  <div className="h-10 w-10 bg-amber-50 rounded-full flex items-center justify-center text-amber-600 font-bold">2</div>
-                  <h4 className="font-black text-sm">资料更改策略</h4>
-                  <p className="text-xs text-gray-500 leading-relaxed">建议登录后24小时后再进行改密、换绑邮箱等操作。资料分批更改，切勿一次性修改所有设置。</p>
-                </div>
-                <div className="space-y-3">
-                  <div className="h-10 w-10 bg-amber-50 rounded-full flex items-center justify-center text-amber-600 font-bold">3</div>
-                  <h4 className="font-black text-sm">售后处理流程</h4>
-                  <p className="text-xs text-gray-500 leading-relaxed">首登封禁、密码错误、无法验证等问题，请在24小时内截图联系微信客服补发，过期或因违规操作导致不予售后。</p>
-                </div>
+            {/* ── 规范与指南 (手机端优化布局) ── */}
+            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-10">
+              <div className="flex items-center mb-8">
+                <AlertTriangle className="h-6 w-6 text-amber-500 mr-3" />
+                <h3 className="text-xl font-black text-gray-900">账号使用安全指南</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  { title: '网络环境', text: '必须使用目标国家原生住宅IP。切勿使用多人共用梯子，避免0播放或封号。', icon: Globe },
+                  { title: '资料更改', text: '建议登录24小时后再修改密保和资料。分批次操作，切勿瞬间改完。', icon: CheckCircle2 },
+                  { title: '售后标准', text: '首登封禁、密码错误等24小时内包换。由于不合规运营导致的异常无法售后。', icon: ShieldCheck }
+                ].map((item, i) => (
+                  <div key={i} className="flex flex-col space-y-3">
+                    <div className="bg-amber-50 w-12 h-12 rounded-2xl flex items-center justify-center">
+                      <item.icon className="h-6 w-6 text-amber-600" />
+                    </div>
+                    <h4 className="font-black text-sm text-gray-900">{item.title}</h4>
+                    <p className="text-xs text-gray-500 leading-relaxed">{item.text}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
-
-          {/* ── 右侧悬浮窗 (大屏可见) ── */}
-          <aside className="hidden xl:block w-64 space-y-4">
-            <div className="bg-gradient-to-br from-[#1a56db] to-[#1e429f] rounded-2xl p-6 text-white shadow-xl shadow-blue-100 sticky top-[84px]">
-              <h3 className="text-lg font-black mb-2">需要批量采购？</h3>
-              <p className="text-[12px] opacity-80 mb-6 leading-relaxed">单次采购超过 50 个账号可申请大客户批发价，并获得独立的技术支持频道。</p>
-              <a 
-                href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d" 
-                className="block w-full bg-white text-[#1a56db] text-center py-3 rounded-xl font-black text-sm hover:bg-blue-50 transition-colors shadow-lg"
-              >
-                联系批发专员
-              </a>
-              <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
-                <div className="flex items-center">
-                  <Globe className="h-4 w-4 mr-3 opacity-60" />
-                  <div>
-                    <div className="text-[10px] opacity-60">Telegram</div>
-                    <div className="text-xs font-bold">@TRXBGB</div>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <MessageSquare className="h-4 w-4 mr-3 opacity-60" />
-                  <div>
-                    <div className="text-[10px] opacity-60">官方微信</div>
-                    <div className="text-xs font-bold">SFTKTKTK</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </aside>
         </div>
       </main>
 
-      <footer className="py-12 text-center">
-        <div className="text-[12px] text-gray-400 font-medium">
-          © 2026 速锋科技 TKTKX.CN · 跨境出海账号服务一级供应商
+      <footer className="py-12 text-center px-6">
+        <p className="text-xs text-gray-400 font-bold mb-2">速锋科技 TKTKX.CN · 2026 跨境出海账号服务一级供应商</p>
+        <div className="flex justify-center space-x-4 opacity-50 grayscale scale-75">
+           <img src="https://www.tktkx.cn/logo.png" className="h-6" alt="security-1" />
+           <img src="https://www.tktkx.cn/logo.png" className="h-6" alt="security-2" />
         </div>
       </footer>
     </div>
