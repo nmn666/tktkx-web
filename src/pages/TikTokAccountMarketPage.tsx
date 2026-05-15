@@ -23,8 +23,47 @@ import {
   LayoutDashboard,
   LogOut,
   User,
-  ArrowRight
+  ArrowRight,
+  Search,
+  ChevronDown,
+  Gamepad2,
+  Mail
 } from 'lucide-react';
+
+// ─── 全平台分类数据 (根据用户提供图片) ───────────────────────
+const sideMenuSocial = [
+  { name: 'VKontakte', icon: '🌐' },
+  { name: 'GMail', icon: '✉️' },
+  { name: 'Twitter', icon: '🐦' },
+  { name: 'TikTok', icon: '🎵' },
+  { name: 'Lnkdn', icon: '💼' },
+  { name: 'Telegram', icon: '✈️' },
+  { name: 'Odnoklassniki', icon: '🆗' },
+  { name: 'Reddit', icon: '🤖' },
+  { name: 'Social Networks', icon: '👥', active: true },
+];
+
+const sideMenuOther = [
+  { name: 'AI accounts' },
+  { name: 'Marketplace' },
+  { name: 'Snapchat' },
+  { name: 'Twitch' },
+  { name: 'Yelp' },
+  { name: 'Quora' },
+  { name: 'Pinterest' },
+  { name: 'Discord' },
+  { name: 'Roblox' },
+  { name: 'Brawl Stars' },
+  { name: 'Eternium' },
+  { name: 'Black Desert Mobile' },
+  { name: 'GTA5' },
+  { name: 'Clash Royale' },
+  { name: 'Epicgames.com' },
+  { name: 'Steam' },
+  { name: 'Other Email services' },
+  { name: 'Clash of Clans' },
+  { name: 'Game Accounts', highlight: true },
+];
 
 // ─── 账号购买数据 ───────────────────────────────────────────
 const accountCategories = [
@@ -173,6 +212,64 @@ export default function TikTokAccountMarketPage() {
     return () => { document.getElementById(scriptId)?.remove(); };
   }, []);
 
+  // ─── 全平台分类菜单组件 ───
+  const PlatformExplorer = () => (
+    <div className="flex flex-col md:flex-row bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm mb-10">
+      {/* Sidebar */}
+      <div className="w-full md:w-64 bg-[#f4f4f4] flex flex-col">
+        <div className="bg-[#2d7a31] text-white p-4 flex items-center justify-between font-bold">
+           <div className="flex items-center gap-2">
+             <Menu className="h-4 w-4" /> 选择一个类别
+           </div>
+           <ChevronDown className="h-4 w-4" />
+        </div>
+        <div className="flex-1 py-1">
+           {sideMenuSocial.map((item, idx) => (
+             <div key={idx} className={`px-4 py-2.5 flex items-center justify-between hover:bg-white cursor-pointer transition-colors group ${item.active ? 'bg-white text-[#2d7a31]' : 'text-gray-600'}`}>
+                <div className="flex items-center gap-3">
+                   <span className="text-base opacity-70">{item.icon}</span>
+                   <span className="text-xs font-black uppercase tracking-tight">{item.name}</span>
+                </div>
+                <ChevronRight className="h-3 w-3 opacity-30 group-hover:opacity-100" />
+             </div>
+           ))}
+        </div>
+      </div>
+      
+      {/* Content Area */}
+      <div className="flex-1 p-0 flex flex-col">
+        <div className="p-4 border-b border-gray-50 flex items-center bg-gray-50/50">
+           <div className="relative flex-1">
+             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+             <input placeholder="搜索全平台账号 (Search for accounts)" className="w-full pl-10 pr-4 py-2 bg-transparent outline-none text-sm font-bold placeholder:text-gray-300" />
+           </div>
+        </div>
+        <div className="p-6 grid grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-8">
+           {sideMenuOther.map((item, idx) => (
+             <div key={idx} className={`text-[13px] font-bold cursor-pointer hover:text-blue-600 transition-colors ${item.highlight ? 'text-[#2d7a31]' : 'text-gray-500'}`}>
+               {item.name}
+             </div>
+           ))}
+           <div className="text-[13px] font-bold text-[#2d7a31] cursor-pointer hover:underline">Show all</div>
+        </div>
+        
+        {/* Banner Area */}
+        <div className="mt-auto p-4 bg-gradient-to-r from-gray-50 to-white border-t border-gray-50 flex items-center justify-between">
+           <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#2d7a31]/10 rounded-full flex items-center justify-center text-[#2d7a31]">
+                 <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div>
+                 <p className="text-[10px] font-black text-gray-400 uppercase">Security First</p>
+                 <p className="text-xs font-black text-gray-700">全平台账号均经过安全审计，24H自动发货</p>
+              </div>
+           </div>
+           <ArrowRight className="h-4 w-4 text-gray-300" />
+        </div>
+      </div>
+    </div>
+  );
+
   const filteredAccountTypes = useMemo(() => 
     accountTypes.filter(a => a.region.split('|').includes(selectedCategory)),
     [selectedCategory]
@@ -286,6 +383,9 @@ export default function TikTokAccountMarketPage() {
             <TrendingUp className="h-4 w-4 mr-2" /> 增粉服务
           </button>
         </div>
+
+        {/* ── 全平台全品类导航 (仿用户图片布局) ── */}
+        {mode === 'account' && <PlatformExplorer />}
 
         {/* ── 核心分类 (手机端改为横向滚动) ── */}
         <div className="mb-6">
