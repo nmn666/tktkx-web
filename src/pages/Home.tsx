@@ -45,9 +45,9 @@ import {
   User,
 
   Calendar,
-
-  Tag
-
+  Tag,
+  Menu,
+  X
 } from 'lucide-react';
 
 import newsData from '@/data/news.json';
@@ -620,6 +620,11 @@ export default function Home() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [statsVisible, setStatsVisible] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // 手机端侧边栏切换
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   // ✅ 动态注入首页结构化数据 (GEO 优化)
   useEffect(() => {
@@ -732,165 +737,134 @@ export default function Home() {
       {/* 导航栏 */}
 
       <motion.header
-
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-
           isScrolled ? 'bg-white shadow-md py-2' : 'bg-white/95 backdrop-blur-sm py-3 shadow-sm'
-
         }`}
-
         initial={{ opacity: 0, y: -20 }}
-
         animate={{ opacity: 1, y: 0 }}
-
         transition={{ duration: 0.5 }}
-
       >
-
         <div className="container mx-auto px-4 flex justify-between items-center">
-
-          <motion.div 
-
-            className="text-xl md:text-2xl font-bold text-pink-600 flex items-center"
-
-            whileHover={{ scale: 1.05 }}
-
-          >
-
-            <span className="mr-2"><Play className="h-6 w-6" /></span>
-
-            TikTok变现专家
-
-          </motion.div>
-
-          
-
-          <nav className="hidden md:flex space-x-8">
-
-            {[
-
-              { text: '首页', href: '#首页' },
-
-              { text: '服务介绍', href: '#服务介绍' },
-
-              { text: 'TikTok 账号市场', href: '/tiktok-market', isExternal: true },
-
-              { text: '成功案例', href: '#成功案例' },
-
-              { text: '行业资讯', href: '/news', isExternal: true },
-
-              { text: '常见问题', href: '#常见问题' },
-
-              { text: '联系我们', href: '#联系我们' }
-
-            ].map((item, index) => (
-
-              item.isExternal ? (
-
-                <Link
-
-                  key={index}
-
-                  to={item.href}
-
-                  className="text-gray-700 hover:text-pink-600 font-medium transition-colors"
-
-                >
-
-                  {item.text}
-
-                </Link>
-
-              ) : (
-
-                <motion.a
-
-                  key={index}
-
-                  href={item.href}
-
-                  className="text-gray-700 hover:text-pink-600 font-medium transition-colors"
-
-                  whileHover={{ scale: 1.05 }}
-
-                >
-
-                  {item.text}
-
-                </motion.a>
-
-              )
-
-            ))}
-
-          </nav>
-
-          
-
-          {/* 登录/注册按钮或用户信息 */}
-
-          {!isAuthenticated ? (
-
-            <div className="flex items-center space-x-3">
-
-              <Link
-
-                to="/login"
-
-                className="hidden sm:flex items-center text-gray-700 hover:text-pink-600 font-medium transition-colors"
-
+          <div className="flex items-center space-x-3">
+             <button 
+                className="md:hidden p-1.5 text-gray-500"
+                onClick={toggleMenu}
               >
-
-                登录
-
-              </Link>
-
-              <Link
-
-                to="/register"
-
-                className="bg-pink-600 text-white px-6 py-2 rounded-full font-medium flex items-center shadow-lg shadow-pink-200 hover:bg-pink-700 transition-colors"
-
-              >
-
-                注册
-
-              </Link>
-
-            </div>
-
-          ) : (
-
-            <div className="flex items-center space-x-3">
-
-              <div className="hidden sm:flex items-center text-gray-700">
-
-                <User className="h-4 w-4 mr-1" />
-
-                <span className="text-sm">{user?.username}</span>
-
-              </div>
-
-              <button
-
-                onClick={logout}
-
-                className="flex items-center text-gray-600 hover:text-pink-600 transition-colors"
-
-              >
-
-                <LogOut className="h-5 w-5" />
-
-                <span className="ml-1 hidden sm:inline">退出</span>
-
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
-
-            </div>
-
-          )}
-
+              <motion.div 
+                className="text-xl md:text-2xl font-bold text-pink-600 flex items-center cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                onClick={() => { navigate('/'); closeMenu(); }}
+              >
+                <span className="mr-2"><Play className="h-6 w-6" /></span>
+                TikTok变现专家
+              </motion.div>
+          </div>
+          
+          <nav className="hidden md:flex space-x-8">
+            {[
+              { text: '首页', href: '#首页' },
+              { text: '服务介绍', href: '#服务介绍' },
+              { text: 'TikTok 账号市场', href: '/tiktok-market', isExternal: true },
+              { text: '成功案例', href: '#成功案例' },
+              { text: '行业资讯', href: '/news', isExternal: true },
+              { text: '常见问题', href: '#常见问题' },
+              { text: '联系我们', href: '#联系我们' }
+            ].map((item, index) => (
+              item.isExternal ? (
+                <Link
+                  key={index}
+                  to={item.href}
+                  className="text-gray-700 hover:text-pink-600 font-medium transition-colors"
+                >
+                  {item.text}
+                </Link>
+              ) : (
+                <motion.a
+                  key={index}
+                  href={item.href}
+                  className="text-gray-700 hover:text-pink-600 font-medium transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {item.text}
+                </motion.a>
+              )
+            ))}
+          </nav>
+          
+          <div className="flex items-center space-x-3">
+            {!isAuthenticated ? (
+              <div className="flex items-center space-x-2">
+                <Link
+                  to="/login"
+                  className="hidden sm:flex items-center text-gray-700 hover:text-pink-600 font-medium transition-colors px-3 py-1"
+                >
+                  登录
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-pink-600 text-white px-5 py-2 rounded-full font-medium flex items-center shadow-lg shadow-pink-200 hover:bg-pink-700 transition-colors text-sm"
+                >
+                  注册
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-3">
+                <div className="hidden sm:flex items-center text-gray-700">
+                  <User className="h-4 w-4 mr-1" />
+                  <span className="text-sm">{user?.username}</span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="p-2 text-gray-500 hover:text-red-500 transition-colors"
+                >
+                  <LogOut className="h-5 w-5" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
+        {/* 手机端侧边栏 */}
+        <div className={`md:hidden fixed inset-0 top-[57px] bg-white z-[55] transition-all duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="p-6 space-y-6">
+            <div className="space-y-2">
+              {[
+                { text: '首页', href: '#首页' },
+                { text: '服务介绍', href: '#服务介绍' },
+                { text: 'TikTok 账号市场', href: '/tiktok-market', isExternal: true },
+                { text: '行业资讯', href: '/news', isExternal: true },
+                { text: '联系我们', href: '#联系我们' }
+              ].map((item, index) => (
+                item.isExternal ? (
+                  <Link
+                    key={index}
+                    to={item.href}
+                    onClick={closeMenu}
+                    className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-3 text-pink-500" /> {item.text}
+                  </Link>
+                ) : (
+                  <a
+                    key={index}
+                    href={item.href}
+                    onClick={closeMenu}
+                    className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-3 text-pink-500" /> {item.text}
+                  </a>
+                )
+              ))}
+            </div>
+            <div className="pt-6 border-t border-gray-100">
+               <a href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d" className="flex items-center p-4 bg-pink-600 text-white rounded-2xl shadow-lg shadow-pink-100 font-bold justify-center">
+                  <MessageSquare className="h-5 w-5 mr-2" /> 联系官方微信客服
+               </a>
+            </div>
+          </div>
+        </div>
       </motion.header>
 
 
