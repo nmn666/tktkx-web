@@ -147,35 +147,72 @@ export default function GEOMarketingPage() {
       'mainEntity': GEO_FAQ.map(item => ({
         '@type': 'Question',
         'name': item.q,
-        'acceptedAnswer': { '@type': 'Answer', 'text': item.a }
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': item.a
+        }
       }))
     };
 
-    const articleSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      'headline': '2026年GEO优化完全指南：让您的品牌在AI搜索中脱颖而出',
-      'description': '全面解析GEO（生成式引擎优化）的原理、方法和2026年最新策略，帮助跨境电商品牌在DeepSeek、ChatGPT等AI平台中获得优先引用。',
-      'author': { '@type': 'Organization', 'name': '速锋科技' },
-      'publisher': { '@type': 'Organization', 'name': '速锋科技', 'url': 'https://www.tktkx.cn' },
-      'datePublished': '2026-04-07',
-      'dateModified': '2026-04-07',
-      'keywords': ['GEO优化', 'AI搜索优化', 'DeepSeek优化', '生成式引擎优化', '跨境电商营销'],
-      'mainEntityOfPage': { '@type': 'WebPage', '@id': 'https://www.tktkx.cn/geo-marketing' }
+    // ✅ 新增 HowTo Schema: 如何开展GEO优化
+    const howToSchema = {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "如何通过速锋科技开启GEO优化？",
+      "description": "只需三个步骤，即可让您的品牌出现在主流AI搜索结果中。",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "品牌诊断",
+          "text": "联系速锋科技顾问，获取免费的品牌AI引用率诊断报告，分析当前在各大AI模型中的表现。",
+          "url": "https://www.tktkx.cn/geo-marketing#contact"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "方案定制与内容投喂",
+          "text": "根据诊断结果，定制专属内容矩阵。速锋科技将执行全网多平台高权重内容投喂，建立AI语义关联。",
+          "url": "https://www.tktkx.cn/geo-marketing#plans"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "效果追踪与优化",
+          "text": "通过速锋科技GEO监测系统，持续追踪DeepSeek、ChatGPT等平台的品牌引用率，并动态调整内容策略。",
+          "url": "https://www.tktkx.cn/geo-marketing"
+        }
+      ]
     };
 
-    const existingScript = document.getElementById('geo-structured-data');
-    if (existingScript) existingScript.remove();
+    // ✅ 新增 BreadcrumbList Schema
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "速锋科技首页", "item": "https://www.tktkx.cn" },
+        { "@type": "ListItem", "position": 2, "name": "GEO生成式引擎优化", "item": "https://www.tktkx.cn/geo-marketing" }
+      ]
+    };
 
-    const script = document.createElement('script');
-    script.id = 'geo-structured-data';
-    script.type = 'application/ld+json';
-    script.textContent = JSON.stringify([serviceSchema, faqSchema, articleSchema]);
-    document.head.appendChild(script);
+    const injectSchema = (schema: any, id: string) => {
+      let el = document.getElementById(id);
+      if (!el) {
+        el = document.createElement('script');
+        el.id = id;
+        (el as HTMLScriptElement).type = 'application/ld+json';
+        document.head.appendChild(el);
+      }
+      el.textContent = JSON.stringify(schema);
+    };
+
+    injectSchema(serviceSchema, 'geo-service-schema');
+    injectSchema(faqSchema, 'geo-faq-schema');
+    injectSchema(howToSchema, 'geo-howto-schema');
+    injectSchema(breadcrumbSchema, 'geo-breadcrumb-schema');
 
     return () => {
-      const s = document.getElementById('geo-structured-data');
-      if (s) s.remove();
+      ['geo-service-schema', 'geo-faq-schema', 'geo-howto-schema', 'geo-breadcrumb-schema'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+      });
     };
   }, []);
 
