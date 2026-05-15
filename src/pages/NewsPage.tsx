@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useSEO } from '@/hooks/useSEO';
-import { ChevronRight, Calendar, Tag, MessageSquare, Globe } from 'lucide-react';
+import { ChevronRight, Calendar, Tag, MessageSquare, Globe, ArrowRight, Menu, X } from 'lucide-react';
 import newsData from '@/data/news.json';
 
 const CATEGORIES = ['全部', 'TikTok运营', '海外社媒', 'GEO优化', '行业深度', '蓝海市场', '选品攻略', 'AI营销'];
@@ -22,6 +22,7 @@ export default function NewsPage() {
   const [activeCategory, setActiveCategory] = useState(
     CATEGORIES.includes(categoryParam) ? categoryParam : '全部'
   );
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useSEO({
     title: '行业资讯 & 运营干货 | 速锋科技 - TikTok, Meta, GEO优化最新动态',
@@ -50,72 +51,114 @@ export default function NewsPage() {
     } else {
       setSearchParams({ category: cat });
     }
+    // Mobile scroll to top of list after change
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f7fa] text-[#333] font-sans">
+    <div className="min-h-screen bg-[#f8f9fb] text-[#333] font-sans pb-10">
       {/* Header */}
-      <header className="bg-white border-b border-[#eef1f6] py-3 px-6 sticky top-0 z-50">
+      <header className="bg-white border-b border-[#eef1f6] py-3 px-4 md:px-6 sticky top-0 z-[60] shadow-sm">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <img src="https://www.tktkx.cn/logo.png" className="h-8 w-auto" alt="速锋科技" />
-            <span className="text-lg font-bold text-[#1a56db]">速锋科技</span>
-          </Link>
-          <div className="hidden md:flex items-center space-x-6 text-sm">
-            <Link to="/" className="text-gray-600 hover:text-blue-600">首页</Link>
-            <Link to="/tiktok-market" className="text-gray-600 hover:text-blue-600">账号市场</Link>
-            <Link to="/social-media-services" className="text-gray-600 hover:text-blue-600">社媒服务</Link>
+          <div className="flex items-center space-x-3">
+             <button 
+              className="md:hidden p-1.5 text-gray-500"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+            <Link to="/" className="flex items-center">
+              <span className="text-xl md:text-2xl font-black text-[#1a56db] tracking-tighter">速锋科技</span>
+            </Link>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-6 text-sm font-bold">
+              <Link to="/" className="text-gray-600 hover:text-blue-600">首页</Link>
+              <Link to="/tiktok-market" className="text-gray-600 hover:text-blue-600">账号市场</Link>
+              <Link to="/geo-marketing" className="text-gray-600 hover:text-blue-600">GEO服务</Link>
+            </div>
+             <a
+              href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#1a56db] hover:bg-[#1e429f] text-white rounded-lg px-4 py-2 flex items-center shadow-md transition-all text-xs font-bold"
+            >
+              <MessageSquare className="h-4 w-4 mr-2" /> 客服
+            </a>
+          </div>
+        </div>
+
+        {/* ── 手机端侧边菜单 ── */}
+        <div className={`md:hidden fixed inset-0 top-[57px] bg-white z-[55] transition-all duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="p-6 space-y-6">
+            <div className="space-y-2">
+              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">主要导航</p>
+              <Link to="/" className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700" onClick={() => setIsMenuOpen(false)}><Globe className="h-5 w-5 mr-3 text-blue-500" /> 首页</Link>
+              <Link to="/tiktok-market" className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700" onClick={() => setIsMenuOpen(false)}><Tag className="h-5 w-5 mr-3 text-pink-500" /> 账号市场</Link>
+              <Link to="/geo-marketing" className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700" onClick={() => setIsMenuOpen(false)}><Zap className="h-5 w-5 mr-3 text-purple-500" /> GEO优化</Link>
+            </div>
+            <div className="pt-6 border-t border-gray-100">
+               <a href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d" className="flex items-center p-4 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-100 font-bold justify-center">
+                  <MessageSquare className="h-5 w-5 mr-2" /> 联系官方微信客服
+               </a>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-[1000px] mx-auto py-10 px-4">
+      <main className="max-w-[1100px] mx-auto py-8 md:py-12 px-4">
         {/* Page Title */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-black text-gray-900 mb-4">行业资讯 & 运营干货</h1>
-          <p className="text-gray-500 max-w-2xl mx-auto">深度解析 TikTok 算法逻辑、GEO优化实战、Meta社媒营销策略，助您在跨境电商领域快人一步。</p>
+        <div className="mb-10 text-center md:text-left">
+          <div className="inline-block bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">Insights & Strategy</div>
+          <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">行业资讯 & 运营干货</h1>
+          <p className="text-gray-500 text-sm md:text-base max-w-2xl leading-relaxed">深度解析 TikTok 算法逻辑、GEO优化实战、Meta社媒营销策略，助您在跨境电商领域快人一步。</p>
         </div>
 
-        {/* Category Tabs */}
-        <div className="mb-8 flex flex-wrap gap-2 justify-center">
-          {CATEGORIES.map(cat => {
-            const count = categoryCounts[cat] || 0;
-            const isActive = activeCategory === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => handleCategoryChange(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-1.5 ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
-                    : 'bg-white text-gray-600 border border-[#eef1f6] hover:border-blue-300 hover:text-blue-600'
-                }`}
-              >
-                {cat}
-                {count > 0 && (
-                  <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                  }`}>
-                    {count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        {/* Category Tabs (Mobile Scrollable) */}
+        <div className="mb-8 overflow-x-auto no-scrollbar -mx-4 px-4 pb-2">
+          <div className="flex flex-nowrap gap-2 md:flex-wrap">
+            {CATEGORIES.map(cat => {
+              const count = categoryCounts[cat] || 0;
+              const isActive = activeCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => handleCategoryChange(cat)}
+                  className={`flex-shrink-0 px-5 py-2.5 rounded-full text-xs font-black transition-all border whitespace-nowrap flex items-center gap-2 ${
+                    isActive
+                      ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-100'
+                      : 'bg-white text-gray-500 border-gray-100 hover:border-gray-200'
+                  }`}
+                >
+                  {cat}
+                  {count > 0 && (
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-black ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400'
+                    }`}>
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Article count */}
-        <p className="text-sm text-gray-400 mb-4">
-          共 <span className="font-bold text-gray-700">{filteredNews.length}</span> 篇文章
-          {activeCategory !== '全部' && <span>（{activeCategory}）</span>}
-        </p>
+        <div className="flex items-center justify-between mb-6 px-1">
+          <p className="text-xs font-black text-gray-400 uppercase tracking-widest">
+            共 <span className="text-gray-900">{filteredNews.length}</span> 篇文章
+            {activeCategory !== '全部' && <span className="text-blue-500 ml-1"># {activeCategory}</span>}
+          </p>
+        </div>
 
-        {/* Article List */}
-        <div className="grid gap-6">
+        {/* Article Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredNews.length === 0 ? (
-            <div className="text-center py-20 text-gray-400">
-              <p className="text-lg">该分类暂无文章</p>
-              <button onClick={() => handleCategoryChange('全部')} className="mt-4 text-blue-600 hover:underline text-sm">查看全部文章</button>
+            <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+              <p className="text-gray-400 font-bold mb-4">该分类暂无文章</p>
+              <button onClick={() => handleCategoryChange('全部')} className="text-blue-600 font-black text-sm hover:underline">查看全部文章</button>
             </div>
           ) : (
             filteredNews.map((news) => {
@@ -124,19 +167,28 @@ export default function NewsPage() {
                 <Link
                   key={news.id}
                   to={`/news/${news.id}`}
-                  className="bg-white rounded-xl border border-[#eef1f6] p-6 shadow-sm hover:shadow-md transition-all group flex flex-col md:flex-row gap-6"
+                  className="bg-white rounded-[2rem] border border-gray-100 p-6 md:p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col h-full"
                 >
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-4 mb-3 text-xs text-gray-400">
-                      <span className="flex items-center"><Calendar className="h-3 w-3 mr-1" /> {news.date}</span>
-                      <span className={`flex items-center font-bold px-2 py-0.5 rounded ${colorClass}`}>
-                        <Tag className="h-3 w-3 mr-1" /> {news.category}
-                      </span>
-                    </div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">{news.title}</h2>
-                    <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">{news.summary}</p>
-                    <div className="mt-4 flex items-center text-blue-600 text-sm font-bold">
-                      阅读全文 <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  <div className="flex items-center justify-between mb-5">
+                    <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${colorClass}`}>
+                      {news.category}
+                    </span>
+                    <span className="text-[10px] font-bold text-gray-400 flex items-center">
+                      <Calendar className="h-3 w-3 mr-1" /> {news.date}
+                    </span>
+                  </div>
+                  <h2 className="text-lg md:text-xl font-black text-gray-900 mb-4 leading-tight group-hover:text-blue-600 transition-colors flex-grow">
+                    {news.title}
+                  </h2>
+                  <p className="text-gray-500 text-xs md:text-sm leading-relaxed mb-6 line-clamp-3">
+                    {news.summary}
+                  </p>
+                  <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
+                    <span className="text-blue-600 text-xs font-black flex items-center">
+                      阅读详情 <ChevronRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <div className="bg-gray-50 p-2 rounded-xl text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                      <ArrowRight className="h-4 w-4" />
                     </div>
                   </div>
                 </Link>
@@ -145,23 +197,29 @@ export default function NewsPage() {
           )}
         </div>
 
-        {/* Footer Contact */}
-        <div className="mt-16 bg-blue-600 rounded-2xl p-8 text-white text-center shadow-xl shadow-blue-100">
-          <h3 className="text-2xl font-black mb-4">需要专业的运营指导？</h3>
-          <p className="mb-8 text-blue-100 opacity-90">无论是账号问题还是流量变现，速锋科技专家团队为您提供 1v1 深度咨询。</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full flex items-center">
-              <MessageSquare className="h-5 w-5 mr-2" /> 微信：SFTKTKTK
-            </div>
-            <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full flex items-center">
-              <Globe className="h-5 w-5 mr-2" /> 电报：@TRXBGB
-            </div>
-          </div>
+        {/* Newsletter / CTA */}
+        <div className="mt-20 relative rounded-[3rem] overflow-hidden bg-gray-900 p-8 md:p-16 text-center">
+           <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+              <div className="absolute top-[-10%] left-[-10%] w-64 h-64 bg-blue-500 rounded-full blur-[100px]" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-purple-500 rounded-full blur-[100px]" />
+           </div>
+           <div className="relative z-10 max-w-2xl mx-auto">
+              <h3 className="text-2xl md:text-4xl font-black text-white mb-6">需要专业的运营指导？</h3>
+              <p className="text-gray-400 mb-10 text-sm md:text-base font-medium">无论是账号问题、流量变现还是 GEO 优化策略，速锋科技专家团队为您提供 1v1 深度咨询。</p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                 <a href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-blue-900/20">
+                    立即联系专家微信
+                 </a>
+                 <div className="text-gray-500 text-xs font-black uppercase tracking-widest">
+                    WeChat: SFTKTKTK
+                 </div>
+              </div>
+           </div>
         </div>
       </main>
 
-      <footer className="py-10 text-center text-sm text-gray-400">
-        © 2026 速锋科技 TKTKX.CN. All Rights Reserved. · 每日更新行业资讯
+      <footer className="py-12 text-center">
+        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">© 2026 速锋科技 TKTKX.CN · 助力中国品牌出海</p>
       </footer>
     </div>
   );
