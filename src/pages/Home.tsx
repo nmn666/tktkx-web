@@ -47,7 +47,8 @@ import {
   Calendar,
   Tag,
   Menu,
-  X
+  X,
+  Zap
 } from 'lucide-react';
 
 import newsData from '@/data/news.json';
@@ -776,16 +777,35 @@ export default function Home() {
       <GEOSchema />
 
       {/* 导航栏 */}
-
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-white shadow-md py-2' : 'bg-white/95 backdrop-blur-sm py-3 shadow-sm'
+          isScrolled ? 'bg-white shadow-md py-0' : 'bg-white/95 backdrop-blur-sm py-0 shadow-sm'
         }`}
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="container mx-auto px-4 flex justify-between items-center">
+        {/* Promotion Banner */}
+        <div className="bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-600 text-white py-2 px-4 shadow-inner relative overflow-hidden group">
+          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="container mx-auto flex items-center justify-center text-[10px] md:text-sm font-black tracking-tight gap-2 relative z-10">
+            <Zap className="h-3 w-3 text-yellow-300 animate-pulse hidden sm:block" />
+            <span className="flex items-center bg-white/20 px-2 py-0.5 rounded text-[8px] md:text-[10px] uppercase mr-1">Hot</span>
+            <span className="hidden sm:inline">满血gpt-5.5，0.3倍率，0.06 稳定0.1。可接入cursor,openclaw,hermes,opencode等编程工具</span>
+            <span className="sm:hidden text-[9px]">满血gpt-5.5，0.3倍率，稳定0.1</span>
+            <a 
+              href="https://www.hstoken.cn/register?aff=VKXUR5QVBRLK" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-yellow-400 text-blue-900 px-3 py-1 rounded-full font-black text-[9px] md:text-[11px] hover:bg-yellow-300 transition-all flex items-center shadow-sm ml-1"
+            >
+              立即注册 <ChevronRight className="h-3 w-3 ml-0.5" />
+            </a>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 flex justify-between items-center py-3">
+
           <div className="flex items-center space-x-3">
              <button 
                 className="md:hidden p-1.5 text-gray-500"
@@ -868,7 +888,7 @@ export default function Home() {
         </div>
 
         {/* 手机端侧边栏 */}
-        <div className={`md:hidden fixed inset-0 top-[57px] bg-white z-[55] transition-all duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className={`md:hidden fixed inset-0 top-[93px] bg-white z-[55] transition-all duration-300 transform ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="p-6 space-y-6">
             <div className="space-y-2">
               {[
@@ -910,10 +930,8 @@ export default function Home() {
 
 
 
-      <main className="pt-16">
-
+      <main className="pt-24">
         {/* 英雄区域 */}
-
         <section id="首页" className="pt-24 pb-16 md:pb-24">
 
           <div className="container mx-auto px-4">
