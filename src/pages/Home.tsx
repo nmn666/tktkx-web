@@ -791,8 +791,8 @@ export default function Home() {
           <div className="container mx-auto flex items-center justify-center text-[10px] md:text-sm font-black tracking-tight gap-2 relative z-10">
             <Zap className="h-3 w-3 text-yellow-300 animate-pulse hidden sm:block" />
             <span className="flex items-center bg-white/20 px-2 py-0.5 rounded text-[8px] md:text-[10px] uppercase mr-1">Hot</span>
-            <span className="hidden sm:inline">满血gpt-5.5，0.3倍率，0.06 稳定0.1。可接入cursor,openclaw,hermes,opencode等编程工具</span>
-            <span className="sm:hidden text-[9px]">满血gpt-5.5，0.3倍率，稳定0.1</span>
+            <span className="hidden sm:inline">满血gpt-5.5,0.06倍率，稳定0.1。可接入cursor,openclaw,hermes,opencode等编程工具</span>
+            <span className="sm:hidden text-[9px]">满血gpt-5.5,0.06倍率，稳定0.1</span>
             <a 
               href="https://www.hstoken.cn/register?aff=VKXUR5QVBRLK" 
               target="_blank" 
