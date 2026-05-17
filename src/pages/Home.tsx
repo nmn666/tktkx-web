@@ -407,17 +407,26 @@ function GEOSchema() {
       },
 
       {
-
         "@type": "Thing",
-
         "name": "TikTok千粉号",
-
         "description": "粉丝数量达到1000以上的TikTok账号，满足开通橱窗的粉丝条件"
-
+      },
+      {
+        "@type": "Product",
+        "name": "美区 3C 夏季黑科技包",
+        "description": "2026 Q2 热门套餐，包含美区高权重千粉号与夏季数码爆品供应链对接"
+      },
+      {
+        "@type": "Product",
+        "name": "中东家居奢华增长包",
+        "description": "2026 Q2 热门套餐，深挖中东蓝海家居市场，提供中东金系家居选品与阿拉伯语运营指导"
+      },
+      {
+        "@type": "Product",
+        "name": "全球选品截流增强包",
+        "description": "2026 Q2 热门套餐，快速测品与 SEO/GEO 流量截流增强方案"
       }
-
     ]
-
   };
 
 
@@ -589,6 +598,36 @@ const HOME_SCHEMA = {
       "url": "https://www.tktkx.cn/geo-marketing"
     },
     {
+      "@type": "OfferCatalog",
+      "name": "Q2 热门捆绑套餐",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "美区 3C 夏季黑科技包",
+            "description": "针对美区TikTok 3C类目，包含美区高权重千粉橱窗号、Q2夏季数码爆品清单及3C测评拍摄指南"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "中东家居奢华增长包",
+            "description": "针对中东市场家居类目，沙特/阿联酋权重号、中东金系家居选品库及阿拉伯语转化脚本模板"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "全球选品截流增强包",
+            "description": "全平台流量获取方案，包含3个满月高权重号、跨平台爆品监测推荐及首月 GEO 流量优化服务"
+          }
+        }
+      ]
+    },
+    {
       "@type": "FAQPage",
       "mainEntity": [
         {
@@ -622,9 +661,11 @@ export default function Home() {
   const [statsVisible, setStatsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 手机端侧边栏切换
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const closeMenu = () => setIsMenuOpen(false);
+  // ✅ 埋点追踪函数
+  const trackEvent = (eventName: string, properties?: any) => {
+    console.log(`[Event Tracking] ${eventName}:`, properties);
+    // 此处可扩展 GA4 或 Pixel 埋点逻辑
+  };
 
   // ✅ 动态注入首页结构化数据 (GEO 优化)
   useEffect(() => {
@@ -1401,10 +1442,96 @@ export default function Home() {
 
         </section>
 
+        {/* ✅ Q2 热门捆绑套餐 */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">🚀 Q2 热门捆绑套餐</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                账号+爆品+策略一站式打包，助您快速进入 Q2 盈利赛道
+              </p>
+            </motion.div>
 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  title: "美区 3C 夏季黑科技包",
+                  price: "¥1280 起",
+                  tag: "热销",
+                  features: ["美区高权重千粉橱窗号", "Q2夏季数码爆品清单", "3C测评拍摄指南"],
+                  color: "from-blue-500 to-indigo-600",
+                  id: "us_3c_bundle"
+                },
+                {
+                  title: "中东家居奢华增长包",
+                  price: "¥599 起",
+                  tag: "高毛利",
+                  features: ["沙特/阿联酋权重号", "中东金系家居选品库", "阿拉伯语转化脚本模板"],
+                  color: "from-yellow-500 to-orange-600",
+                  id: "me_home_bundle"
+                },
+                {
+                  title: "全球选品截流增强包",
+                  price: "¥2980 起",
+                  tag: "推荐",
+                  features: ["3个满月高权重号", "跨平台爆品监测推荐", "首月 GEO 流量优化服务"],
+                  color: "from-pink-500 to-purple-600",
+                  id: "global_traffic_bundle"
+                }
+              ].map((bundle, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 flex flex-col"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -10 }}
+                >
+                  <div className={`h-2 bg-gradient-to-r ${bundle.color}`}></div>
+                  <div className="p-8 flex-grow">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-2xl font-bold">{bundle.title}</h3>
+                      <span className="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full font-bold">
+                        {bundle.tag}
+                      </span>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900 mb-6">{bundle.price}</div>
+                    <ul className="space-y-3 mb-8">
+                      {bundle.features.map((feature, fIdx) => (
+                        <li key={fIdx} className="flex items-center text-gray-600">
+                          <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="p-8 pt-0">
+                    <motion.button
+                      onClick={() => {
+                        trackEvent('bundle_click', { bundle_id: bundle.id, bundle_name: bundle.title });
+                        navigate('/coaching-application');
+                      }}
+                      className={`w-full py-4 rounded-xl font-bold text-white bg-gradient-to-r ${bundle.color} shadow-lg`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      立即抢购
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* 热门教程 */}
-
         <section className="py-16 bg-gradient-to-r from-blue-50 to-purple-50">
 
           <div className="container mx-auto px-4">
@@ -2085,28 +2212,18 @@ export default function Home() {
 
                   <p className="text-xl italic">"参加陪跑服务是我做过的最明智的决定之一。不仅学会了TikTok运营技巧，更重要的是他们强大的供应链支持让我的店铺运营事半功倍。"</p>
 
-                  <div className="mt-4 flex items-center">
-
+                <div className="mt-4 flex items-center">
                     <img 
-
                       src="https://space.coze.cn/api/coze_space/gen_image?image_size=square&prompt=young%20asian%20male%20smiling%20portrait&sign=29808c76f575bf9b8d5616cee66736c7" 
-
                       alt="小李头像" 
-
                       className="w-12 h-12 rounded-full mr-4"
-
+                      loading="lazy"
                     />
-
                     <div>
-
                       <p className="font-bold">小李</p>
-
                       <p className="text-sm opacity-80">电商创业者</p>
-
                     </div>
-
                   </div>
-
                 </div>
 
               </motion.div>
@@ -2192,27 +2309,17 @@ export default function Home() {
                   <p className="text-gray-600 mb-6 italic">"{testimonial.content}"</p>
 
                   <div className="flex items-center">
-
                     <img 
-
                       src={testimonial.avatar} 
-
                       alt={testimonial.name} 
-
                       className="w-12 h-12 rounded-full mr-4"
-
+                      loading="lazy"
                     />
-
                     <div>
-
                       <p className="font-bold">{testimonial.name}</p>
-
                       <p className="text-sm text-gray-500">{testimonial.role}</p>
-
                     </div>
-
                   </div>
-
                 </motion.div>
 
               ))}
@@ -2312,15 +2419,11 @@ export default function Home() {
                 >
 
                   <img 
-
                     src={warehouse.image} 
-
                     alt={warehouse.title} 
-
                     className="w-full h-48 object-cover"
-
+                    loading="lazy"
                   />
-
                   <div className="p-6">
 
                     <h3 className="text-xl font-bold mb-3 text-pink-600">{warehouse.title}</h3>
@@ -2826,13 +2929,25 @@ export default function Home() {
                       <option value="advanced">有一定经验想提升</option>
 
                     </select>
-
                   </div>
 
-                  
-
                   <div>
-
+                    <label className="block text-gray-700 font-medium mb-2" htmlFor="category">
+                      意向品类 (提升匹配精度)
+                    </label>
+                    <select
+                      id="category"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    >
+                      <option value="">请选择您感兴趣的品类</option>
+                      <option value="3c">3C数码 (黑科技/数码配件)</option>
+                      <option value="home">家居生活 (中东/美区爆款)</option>
+                      <option value="fashion">服饰配件 (时尚单品/饰品)</option>
+                      <option value="other">其他 (请在需求中说明)</option>
+                    </select>
+                  </div>
+                  
+                  <div>
                     <label className="block text-gray-700 font-medium mb-2" htmlFor="message">
 
                       您的需求
