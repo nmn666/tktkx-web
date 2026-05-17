@@ -85,6 +85,18 @@
     <priority>0.30</priority>
   </url>
   <url>
+    <loc>https://www.tktkx.cn/news/20260517-1</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.tktkx.cn/news/20260517-2</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
     <loc>https://www.tktkx.cn/news/20260416-1</loc>
     <lastmod>2026-05-17</lastmod>
     <changefreq>monthly</changefreq>
