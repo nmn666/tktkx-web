@@ -1,42 +1,26 @@
 User-agent: *
 Allow: /
+Allow: /news/
+Allow: /tiktok-market
+Allow: /geo-marketing
 
-# Sitemap
-Sitemap: https://www.tktkx.cn/sitemap.xml
-
-# Allow AI / Generative Search Crawlers (GEO Optimization)
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: CCBot
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: Claude-Web
+# Allow AI Crawlers
+User-agent: DeepSeek
 Allow: /
 
 User-agent: Bytespider
 Allow: /
 
-User-agent: Applebot-Extended
+User-agent: GPTBot
 Allow: /
 
-User-agent: cohere-ai
+User-agent: ClaudeBot
 Allow: /
 
-User-agent: Diffbot
+User-agent: CCBot
 Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://www.tktkx.cn/sitemap.xml
