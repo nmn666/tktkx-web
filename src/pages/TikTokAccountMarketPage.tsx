@@ -169,6 +169,7 @@ export default function TikTokAccountMarketPage() {
   const [selectedServiceId, setSelectedServiceId] = useState(4858);
   const [socialQty, setSocialQty]                 = useState(1000);
   const [isMenuOpen, setIsMenuOpen]               = useState(false);
+  const [isPaying, setIsPaying]                   = useState(false);
 
   // GEO 优化：结构化数据
   const MARKET_SCHEMA = {
@@ -210,6 +211,14 @@ export default function TikTokAccountMarketPage() {
     }
     el.textContent = JSON.stringify(MARKET_SCHEMA);
     return () => { document.getElementById(scriptId)?.remove(); };
+  }, []);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('pay') === 'success') {
+      alert('支付成功！系统正在处理您的订单，请稍后在个人中心查看或联系客服。');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   // ─── 全平台分类菜单组件 ───
@@ -303,6 +312,39 @@ export default function TikTokAccountMarketPage() {
     }
   };
 
+  const handleCheckout = async () => {
+    if (isPaying) return;
+    setIsPaying(true);
+    
+    try {
+      const goodsName = mode === 'account' 
+        ? `${selectedAccount.title} x ${quantity}` 
+        : `${selectedService?.name} (Qty: ${socialQty})`;
+        
+      const response = await fetch('/api/pay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: goodsName,
+          money: totalPrice.toFixed(2),
+          type: 'alipay'
+        })
+      });
+      
+      const data = await response.json();
+      if (data.ok && data.pay_url) {
+        window.location.href = data.pay_url;
+      } else {
+        alert('支付生成失败: ' + (data.error || '未知错误'));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('支付请求出错，请检查网络或联系客服');
+    } finally {
+      setIsPaying(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f8f9fb] text-[#333] font-sans pb-32 md:pb-20">
       {/* ── 手机端底部粘性结算条 ── */}
@@ -311,8 +353,12 @@ export default function TikTokAccountMarketPage() {
           <p className="text-[10px] text-gray-400 font-bold uppercase">总计费用</p>
           <p className="text-2xl font-black text-blue-600">¥ {totalPrice.toFixed(2)}</p>
         </div>
-        <button className="bg-blue-600 text-white px-8 py-3.5 rounded-xl font-black text-sm flex items-center shadow-lg shadow-blue-100 active:scale-95 transition-transform">
-          立即购买 <ChevronRight className="h-4 w-4 ml-1" />
+        <button 
+          onClick={handleCheckout}
+          disabled={isPaying}
+          className={`${isPaying ? 'bg-gray-400' : 'bg-blue-600'} text-white px-8 py-3.5 rounded-xl font-black text-sm flex items-center shadow-lg shadow-blue-100 active:scale-95 transition-transform`}
+        >
+          {isPaying ? '处理中...' : '立即购买'} <ChevronRight className="h-4 w-4 ml-1" />
         </button>
       </div>
 
@@ -473,8 +519,12 @@ export default function TikTokAccountMarketPage() {
                           支付完成后<br />系统自动发货
                         </div>
                       </div>
-                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-2xl py-5 font-black text-lg shadow-xl shadow-blue-100 transition-all transform active:scale-[0.98] flex items-center justify-center">
-                        立即下单购买 <ArrowRight className="h-5 w-5 ml-2" />
+                      <button 
+                        onClick={handleCheckout}
+                        disabled={isPaying}
+                        className={`w-full ${isPaying ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-2xl py-5 font-black text-lg shadow-xl shadow-blue-100 transition-all transform active:scale-[0.98] flex items-center justify-center`}
+                      >
+                        {isPaying ? '正在跳转支付...' : '立即下单购买'} <ArrowRight className="h-5 w-5 ml-2" />
                       </button>
                     </div>
                   </div>
