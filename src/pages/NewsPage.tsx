@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useSEO } from '@/hooks/useSEO';
-import { ChevronRight, Calendar, Tag, MessageSquare, Globe, ArrowRight, Menu, X } from 'lucide-react';
+import { ChevronRight, Calendar, Tag, MessageSquare, Globe, ArrowRight, Menu, X, Zap } from 'lucide-react';
 import newsData from '@/data/news.json';
 
 const CATEGORIES = ['全部', 'TikTok运营', '海外社媒', 'GEO优化', '行业深度', '蓝海市场', '选品攻略', 'AI营销'];
