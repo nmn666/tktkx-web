@@ -65,10 +65,31 @@ const sideMenuOther = [
   { name: 'Game Accounts', highlight: true },
 ];
 
+// ─── 全球 TikTok 账号覆盖国家 ──────────────────────────────
+const countryList = [
+  { name: '美国', flag: '🇺🇸', code: 'US' },
+  { name: '英国', flag: '🇬🇧', code: 'UK' },
+  { name: '德国', flag: '🇩🇪', code: 'DE' },
+  { name: '法国', flag: '🇫🇷', code: 'FR' },
+  { name: '泰国', flag: '🇹🇭', code: 'TH' },
+  { name: '越南', flag: '🇻🇳', code: 'VN' },
+  { name: '印尼', flag: '🇮🇩', code: 'ID' },
+  { name: '菲律宾', flag: '🇵🇭', code: 'PH' },
+  { name: '马来西亚', flag: '🇲🇾', code: 'MY' },
+  { name: '沙特', flag: '🇸🇦', code: 'SA' },
+  { name: '阿联酋', flag: '🇦🇪', code: 'AE' },
+  { name: '巴西', flag: '🇧🇷', code: 'BR' },
+  { name: '日本', flag: '🇯🇵', code: 'JP' },
+  { name: '韩国', flag: '🇰🇷', code: 'KR' },
+  { name: '意大利', flag: '🇮🇹', code: 'IT' },
+  { name: '西班牙', flag: '🇪🇸', code: 'ES' },
+];
+
 // ─── 账号购买数据 ───────────────────────────────────────────
 const accountCategories = [
   { id: 'hot',        name: '热销爆款',       icon: '🔥' },
-  { id: 'full-moon',  name: '满月/千粉',      icon: '🌕' },
+  { id: 'white',      name: '满月白号',       icon: '🌕' },
+  { id: 'showcase',   name: '橱窗号',         icon: '🛍️' },
   { id: 'us',         name: '美国区',         icon: '🇺🇸' },
   { id: 'uk',         name: '英国区',         icon: '🇬🇧' },
   { id: 'sea',        name: '东南亚',         icon: '🌏' },
@@ -81,11 +102,11 @@ const accountCategories = [
 
 const accountTypes = [
   // ── 热销爆款 ──────────────────────────────────────────
-  { id: 1,   title: '美国-优质满月白号',         region: 'us|hot|full-moon|all', tag: '邮箱号',  price: 9,    stock: 500, description: '【推荐】注册满30-45天，模拟真实环境养号，权重稳定。支持更改资料、2FA安全验证，适合开通美区橱窗及Shop运营。' },
-  { id: 2,   title: '美国-橱窗号 (1000真人粉)',  region: 'us|hot|full-moon|all', tag: '橱窗号',  price: 85,   stock: 120, description: '【爆款】已开通TikTok橱窗功能，自带1000+真实活跃粉丝。由于带货门槛，到手即可直接挂载小黄车带货。' },
-  { id: 3,   title: '英国-优质满月白号',         region: 'uk|hot|full-moon|all', tag: '邮箱号',  price: 12,   stock: 300, description: '注册满30天，纯正英区原生住宅IP养号。适合开通英区TikTok Shop本土店或跨境店。' },
-  { id: 5,   title: '全球通用-高质满月白号',     region: 'hot|full-moon|all',    tag: '满月号',  price: 8,    stock: 999, description: '德/法/意/西等随机发货，注册满30天，环境干净，适合批量采集数据或跑基础流量。' },
-  { id: 6,   title: '高权重千粉号 (地区定制)',    region: 'hot|full-moon|all',    tag: '千粉号',  price: 79,   stock: 200, description: '粉丝1000+，无违规记录。可根据需求定制美、英、法、德等特定区域权重。' },
+  { id: 1,   title: '美国-优质满月白号',         region: 'us|hot|white|all', tag: '邮箱号',  price: 9,    stock: 500, description: '【推荐】注册满30-45天，模拟真实环境养号，权重稳定。支持更改资料、2FA安全验证，适合开通美区橱窗及Shop运营。' },
+  { id: 2,   title: '美国-橱窗号 (1000真人粉)',  region: 'us|hot|showcase|all', tag: '橱窗号',  price: 85,   stock: 120, description: '【爆款】已开通TikTok橱窗功能，自带1000+真实活跃粉丝。由于带货门槛，到手即可直接挂载小黄车带货。' },
+  { id: 3,   title: '英国-优质满月白号',         region: 'uk|hot|white|all', tag: '邮箱号',  price: 12,   stock: 300, description: '注册满30天，纯正英区原生住宅IP养号。适合开通英区TikTok Shop本土店或跨境店。' },
+  { id: 5,   title: '全球通用-高质满月白号',     region: 'hot|white|all',    tag: '满月号',  price: 8,    stock: 999, description: '德/法/意/西等随机发货，注册满30天，环境干净，适合批量采集数据或跑基础流量。' },
+  { id: 6,   title: '高权重千粉号 (地区定制)',    region: 'hot|showcase|all',    tag: '千粉号',  price: 79,   stock: 200, description: '粉丝1000+，无违规记录。可根据需求定制美、英、法、德等特定区域权重。' },
 
   // ── 美国区专场 ────────────────────────────────────────
   { id: 10,  title: '美国-5000粉高权重号',      region: 'us|high-fan|all',     tag: '高粉号',  price: 260,  stock: 30,  description: '【旗舰】自带5000+高质量真人粉丝，账号历史干净，权重极高，极易触发推荐系统流量爆发。' },
@@ -97,18 +118,19 @@ const accountTypes = [
   { id: 21,  title: '英区资料本土店',           region: 'uk|ads|all',          tag: '店铺',    price: 420,  stock: 15,  description: '高稳定性英区本土店账号，包含全套售后支持，适合长期电商运营。' },
 
   // ── 东南亚区 (SEA) ──────────────────────────────────
-  { id: 30,  title: '泰国-满月白号',            region: 'sea|all',             tag: '邮箱号',  price: 8,    stock: 400, description: '泰区注册满30天账号，环境干净，适合泰区短视频引流和矩阵起号。' },
-  { id: 31,  title: '泰国-橱窗号 (1000粉)',      region: 'sea|all',             tag: '橱窗号',  price: 72,   stock: 90,  description: '泰区千粉号，支持直接开通小黄车带货，东南亚热门电商市场首选。' },
-  { id: 36,  title: '马来西亚-满月白号',         region: 'sea|all',             tag: '邮箱号',  price: 9,    stock: 300, description: '马区注册满30天，权重稳定，适合马区电商运营起号。' },
-  { id: 37,  title: '马来西亚-橱窗号',           region: 'sea|all',             tag: '橱窗号',  price: 82,   stock: 50,  description: '马区千粉号，支持开通橱窗带货，粉丝活跃。' },
+  { id: 30,  title: '泰国-满月白号',            region: 'sea|white|all',             tag: '邮箱号',  price: 8,    stock: 400, description: '泰区注册满30天账号，环境干净，适合泰区短视频引流和矩阵起号。' },
+  { id: 31,  title: '泰国-橱窗号 (1000粉)',      region: 'sea|showcase|all',             tag: '橱窗号',  price: 72,   stock: 90,  description: '泰区千粉号，支持直接开通小黄车带货，东南亚热门电商市场首选。' },
+  { id: 32,  title: '越南-满月白号',            region: 'sea|white|all',             tag: '邮箱号',  price: 7,    stock: 200, description: '越区注册满30天账号，权重稳定。' },
+  { id: 36,  title: '马来西亚-满月白号',         region: 'sea|white|all',             tag: '邮箱号',  price: 9,    stock: 300, description: '马区注册满30天，权重稳定，适合马区电商运营起号。' },
+  { id: 37,  title: '马来西亚-橱窗号',           region: 'sea|showcase|all',             tag: '橱窗号',  price: 82,   stock: 50,  description: '马区千粉号，支持开通橱窗带货，粉丝活跃。' },
 
   // ── 欧洲区 (EU) ────────────────────────────────────────
-  { id: 50,  title: '德国-权重满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 120, description: '德区权重满月号，适合针对高净值德语用户进行内容创作。' },
-  { id: 51,  title: '法国-权重满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 130, description: '法区权重满月号，适合时尚、美妆等品类在法国市场的推广。' },
-
+  { id: 50,  title: '德国-权重满月白号',         region: 'eu|white|all',              tag: '邮箱号',  price: 14,   stock: 120, description: '德区权重满月号，适合针对高净值德语用户进行内容创作。' },
+  { id: 51,  title: '法国-权重满月白号',         region: 'eu|white|all',              tag: '邮箱号',  price: 14,   stock: 130, description: '法区权重满月号，适合时尚、美妆等品类在法国市场的推广。' },
+ 
   // ── 中东区 (ME) ────────────────────────────────────────
-  { id: 90,  title: '沙特-权重满月白号',         region: 'me|all',              tag: '邮箱号',  price: 18,   stock: 150, description: '沙特区权重号，中东土豪金区，流量价值极高。' },
-  { id: 91,  title: '沙特-1000粉橱窗号',         region: 'me|all',              tag: '橱窗号',  price: 128,  stock: 30,  description: '沙特橱窗号，高客单价蓝海市场带货神器。' },
+  { id: 90,  title: '沙特-权重满月白号',         region: 'me|white|all',              tag: '邮箱号',  price: 18,   stock: 150, description: '沙特区权重号，中东土豪金区，流量价值极高。' },
+  { id: 91,  title: '沙特-1000粉橱窗号',         region: 'me|showcase|all',              tag: '橱窗号',  price: 128,  stock: 30,  description: '沙特橱窗号，高客单价蓝海市场带货神器。' },
 
   // ── 特色账号 ──────────────────────────────────────────
   { id: 180, title: 'TikTok 1万粉 (创作基金号)',  region: 'high-fan|all',         tag: '基金号',  price: 850,  stock: 10,  description: '【旗舰精品】自带1万真实粉丝，已成功开通Creator Fund，视频播放即可产生美金收益。' },
@@ -116,7 +138,7 @@ const accountTypes = [
 
 const accountInfoItems = [
   { Icon: Clock,       label: '自动发货', desc: '秒速交付' },
-  { Icon: ShieldCheck, label: '24H售后',  desc: '安全保障' },
+  { Icon: ShieldCheck, label: '售后保障',  desc: '安全合规' },
   { Icon: TrendingUp,  label: '高权重',  desc: '原生环境' },
   { Icon: Zap,         label: '30天+',   desc: '注册时长' },
 ];
@@ -177,8 +199,8 @@ export default function TikTokAccountMarketPage() {
     "@graph": [
       {
         "@type": "Product",
-        "name": "TikTok 满月白号 / 千粉橱窗号",
-        "description": "专业TikTok运营账号，包含注册满30天的权重满月号及自带1000+粉丝的橱窗开通号。24小时自动发货，安全稳定。",
+        "name": "TikTok 满月白号 / 橱窗号",
+        "description": "专业TikTok运营账号，包含注册满30天的权重满月白号及自带1000+粉丝的橱窗开通号。24小时自动发货，安全稳定。",
         "brand": { "@type": "Brand", "name": "速锋科技" },
         "offers": {
           "@type": "AggregateOffer",
@@ -279,9 +301,31 @@ export default function TikTokAccountMarketPage() {
     </div>
   );
 
-  const filteredAccountTypes = useMemo(() => 
+  const filteredAccountTypes = useMemo(() =>
     accountTypes.filter(a => a.region.split('|').includes(selectedCategory)),
     [selectedCategory]
+  );
+
+  // ─── 全球国家列表组件 ───
+  const GlobalCountries = () => (
+    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 mb-10">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center">
+          <Globe className="h-6 w-6 text-blue-600 mr-3" />
+          <h3 className="text-xl font-black text-gray-900 uppercase">TikTok 账号覆盖全球国家</h3>
+        </div>
+        <span className="bg-green-100 text-green-700 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter">Global Availability</span>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+        {countryList.map((c, i) => (
+          <div key={i} className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors group">
+            <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">{c.flag}</span>
+            <span className="text-xs font-black text-gray-700">{c.name}</span>
+            <span className="text-[9px] font-black text-gray-400 mt-1">{c.code}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 
   const selectedAccount = useMemo(() => 
@@ -300,7 +344,7 @@ export default function TikTokAccountMarketPage() {
     title: 'TikTok账号购买 | TK千粉/白号批发 - 24H自动发货 - 速锋科技',
     description: '专业TikTok账号购买平台，提供美区/英区满月白号、橱窗号（1000粉）、店铺开通，以及TikTok/Instagram/YouTube等平台增粉点赞服务。',
     canonical: 'https://www.tktkx.cn/tiktok-market',
-    keywords: 'TikTok账号购买,TK千粉,白号批发,24H自动发货,美区新号,英区满月号,橱窗号购买,TikTok成品号,2FA验证账号',
+    keywords: 'TikTok账号购买,TK千粉,白号批发,24H自动发货,美区新号,英区满月号,橱窗号购买,TikTok成品号,2FA验证账号,TikTok满月白号',
   });
 
   const handlePlatformChange = (id: string) => {
@@ -431,7 +475,12 @@ export default function TikTokAccountMarketPage() {
         </div>
 
         {/* ── 全平台全品类导航 (仿用户图片布局) ── */}
-        {mode === 'account' && <PlatformExplorer />}
+        {mode === 'account' && (
+          <>
+            <PlatformExplorer />
+            <GlobalCountries />
+          </>
+        )}
 
         {/* ── 核心分类 (手机端改为横向滚动) ── */}
         <div className="mb-6">
@@ -590,7 +639,7 @@ export default function TikTokAccountMarketPage() {
                 {[
                   { title: '网络环境', text: '必须使用目标国家原生住宅IP。切勿使用多人共用梯子，避免0播放或封号。', icon: Globe },
                   { title: '资料更改', text: '建议登录24小时后再修改密保和资料。分批次操作，切勿瞬间改完。', icon: CheckCircle2 },
-                  { title: '售后标准', text: '首登封禁、密码错误等24小时内包换。由于不合规运营导致的异常无法售后。', icon: ShieldCheck }
+                  { title: '售后标准', text: '首登封禁、密码错误等及时联系包换。由于不合规运营导致的异常无法售后。', icon: ShieldCheck }
                 ].map((item, i) => (
                   <div key={i} className="flex flex-col space-y-3">
                     <div className="bg-amber-50 w-12 h-12 rounded-2xl flex items-center justify-center">
