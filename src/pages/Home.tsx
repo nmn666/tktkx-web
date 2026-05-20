@@ -663,6 +663,9 @@ export default function Home() {
   const [statsVisible, setStatsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
   // ✅ 埋点追踪函数
   const trackEvent = (eventName: string, properties?: any) => {
     console.log(`[Event Tracking] ${eventName}:`, properties);
