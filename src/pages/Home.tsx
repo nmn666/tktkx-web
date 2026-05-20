@@ -657,6 +657,7 @@ const HOME_SCHEMA = {
 export default function Home() {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
+  const statsRef = useRef<HTMLDivElement>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
