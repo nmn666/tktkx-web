@@ -5,7 +5,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
-const MotionLink = motion(Link);
 
 import { useAuth } from '@/contexts/authContext';
 
@@ -56,6 +55,7 @@ import newsData from '@/data/news.json';
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+const MotionLink = motion(Link);
 
 
 // 模拟案例数据
