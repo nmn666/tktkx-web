@@ -55,7 +55,6 @@ import newsData from '@/data/news.json';
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const MotionLink = motion.a;
 const MotionRouterLink = motion(Link);
 
 
@@ -844,14 +843,14 @@ export default function Home() {
                   {item.text}
                 </MotionRouterLink>
               ) : (
-                <MotionLink
+                <motion.a
                   key={index}
                   href={item.href}
                   className="text-gray-700 hover:text-pink-600 font-medium transition-colors"
                   whileHover={{ scale: 1.05 }}
                 >
                   {item.text}
-                </MotionLink>
+                </motion.a>
               )
             ))}
           </nav>
@@ -901,14 +900,14 @@ export default function Home() {
                 { text: '联系我们', href: '#联系我们' }
               ].map((item, index) => (
                 item.isExternal ? (
-                  <MotionRouterLink
+                  <Link
                     key={index}
                     to={item.href}
                     onClick={closeMenu}
                     className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700"
                   >
                     <ChevronRight className="h-4 w-4 mr-3 text-pink-500" /> {item.text}
-                  </MotionRouterLink>
+                  </Link>
                 ) : (
                   <a
                     key={index}
@@ -3117,23 +3116,14 @@ export default function Home() {
               <div className="flex space-x-4">
 
                 {['facebook', 'twitter', 'instagram', 'youtube'].map((social) => (
-
-                  <MotionLink
-
+                  <motion.a
                     key={social}
-
                     href="#"
-
                     className="bg-gray-800 p-2 rounded-full hover:bg-pink-600 transition-colors"
-
                     whileHover={{ scale: 1.1, rotate: 5 }}
-
                   >
-
                     <i className={`fa-brands fa-${social}`}></i>
-
-                  </MotionLink>
-
+                  </motion.a>
                 ))}
 
               </div>
@@ -3219,25 +3209,14 @@ export default function Home() {
                 <ul className="space-y-2">
 
                   {column.links.map((link, linkIndex) => (
-
                     <li key={linkIndex}>
-
-                      <MotionLink
-
-                        to={typeof link === 'string' ? '#' : link.url}
-
+                      <Link
+                        to={typeof link === 'string' ? '#' : (link.url || '#')}
                         className="text-gray-400 hover:text-white transition-colors"
-
-                        whileHover={{ x: 5 }}
-
                       >
-
                         {typeof link === 'string' ? link : link.text}
-
-                      </MotionLink>
-
+                      </Link>
                     </li>
-
                   ))}
 
                 </ul>
