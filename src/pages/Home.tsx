@@ -55,6 +55,8 @@ import newsData from '@/data/news.json';
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+const MotionLink = motion.a;
+const MotionRouterLink = motion(Link);
 
 
 // 模拟案例数据
@@ -834,13 +836,13 @@ export default function Home() {
               { text: '联系我们', href: '#联系我们' }
             ].map((item, index) => (
               item.isExternal ? (
-                <Link
+                <MotionRouterLink
                   key={index}
                   to={item.href}
                   className="text-gray-700 hover:text-pink-600 font-medium transition-colors"
                 >
                   {item.text}
-                </Link>
+                </MotionRouterLink>
               ) : (
                 <MotionLink
                   key={index}
@@ -899,14 +901,14 @@ export default function Home() {
                 { text: '联系我们', href: '#联系我们' }
               ].map((item, index) => (
                 item.isExternal ? (
-                  <Link
+                  <MotionRouterLink
                     key={index}
                     to={item.href}
                     onClick={closeMenu}
                     className="flex items-center p-3 rounded-xl hover:bg-gray-50 font-bold text-gray-700"
                   >
                     <ChevronRight className="h-4 w-4 mr-3 text-pink-500" /> {item.text}
-                  </Link>
+                  </MotionRouterLink>
                 ) : (
                   <a
                     key={index}
@@ -1698,7 +1700,7 @@ export default function Home() {
 
               ].map((tutorial, index) => (
 
-                <Link
+                <MotionRouterLink
 
                   key={index}
 
@@ -1734,7 +1736,7 @@ export default function Home() {
 
                   </div>
 
-                </Link>
+                </MotionRouterLink>
 
               ))}
 
