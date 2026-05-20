@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
+const MotionLink = motion(Link);
 
 import { useAuth } from '@/contexts/authContext';
 
@@ -842,14 +843,14 @@ export default function Home() {
                   {item.text}
                 </Link>
               ) : (
-                <motion.a
+                <MotionLink
                   key={index}
                   href={item.href}
                   className="text-gray-700 hover:text-pink-600 font-medium transition-colors"
                   whileHover={{ scale: 1.05 }}
                 >
                   {item.text}
-                </motion.a>
+                </MotionLink>
               )
             ))}
           </nav>
@@ -1698,11 +1699,11 @@ export default function Home() {
 
               ].map((tutorial, index) => (
 
-                <motion.a
+                <MotionLink
 
                   key={index}
 
-                  href={tutorial.url}
+                  to={tutorial.url}
 
                   className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
 
@@ -1734,7 +1735,7 @@ export default function Home() {
 
                   </div>
 
-                </motion.a>
+                </MotionLink>
 
               ))}
 
@@ -3116,7 +3117,7 @@ export default function Home() {
 
                 {['facebook', 'twitter', 'instagram', 'youtube'].map((social) => (
 
-                  <motion.a
+                  <MotionLink
 
                     key={social}
 
@@ -3130,7 +3131,7 @@ export default function Home() {
 
                     <i className={`fa-brands fa-${social}`}></i>
 
-                  </motion.a>
+                  </MotionLink>
 
                 ))}
 
@@ -3220,9 +3221,9 @@ export default function Home() {
 
                     <li key={linkIndex}>
 
-                      <motion.a
+                      <MotionLink
 
-                        href={typeof link === 'string' ? '#' : link.url}
+                        to={typeof link === 'string' ? '#' : link.url}
 
                         className="text-gray-400 hover:text-white transition-colors"
 
@@ -3232,7 +3233,7 @@ export default function Home() {
 
                         {typeof link === 'string' ? link : link.text}
 
-                      </motion.a>
+                      </MotionLink>
 
                     </li>
 
@@ -3258,9 +3259,9 @@ export default function Home() {
 
             <div className="flex space-x-6">
 
-              <a 
+              <Link 
 
-                href="/privacy-policy"
+                to="/privacy-policy"
 
                 target="_blank"
 
@@ -3272,11 +3273,11 @@ export default function Home() {
 
                 隐私政策
 
-              </a>
+              </Link>
 
-              <a 
+              <Link 
 
-                href="/terms-of-service" 
+                to="/terms-of-service" 
 
                 target="_blank"
 
@@ -3288,7 +3289,7 @@ export default function Home() {
 
                 服务条款
 
-              </a>
+              </Link>
 
               <a href="#" className="text-gray-400 hover:text-white transition-colors">Cookie政策</a>
 
