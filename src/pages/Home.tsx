@@ -55,7 +55,6 @@ import newsData from '@/data/news.json';
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const MotionLink = motion(Link);
 
 
 // 模拟案例数据
@@ -1699,7 +1698,7 @@ export default function Home() {
 
               ].map((tutorial, index) => (
 
-                <MotionLink
+                <Link
 
                   key={index}
 
@@ -1735,7 +1734,7 @@ export default function Home() {
 
                   </div>
 
-                </MotionLink>
+                </Link>
 
               ))}
 
