@@ -1,0 +1,21 @@
+{
+  "accountCategories": [
+    { "id": "hot", "name": "热销爆款", "icon": "🔥" },
+    { "id": "full-moon", "name": "满月/千粉", "icon": "🌕" },
+    { "id": "us", "name": "美国区", "icon": "🇺🇸" },
+    { "id": "uk", "name": "英国区", "icon": "🇬🇧" },
+    { "id": "sea", "name": "东南亚", "icon": "🌏" },
+    { "id": "eu", "name": "欧洲区", "icon": "🇪🇺" },
+    { "id": "me", "name": "中东区", "icon": "🌙" },
+    { "id": "ads", "name": "广告/企业", "icon": "📊" },
+    { "id": "high-fan", "name": "高粉/基金", "icon": "📈" },
+    { "id": "all", "name": "全部账号", "icon": "🌐" }
+  ],
+  "accountTypes": [
+    { "id": 1, "title": "美国-优质满月白号", "region": "us|hot|full-moon|all", "tag": "邮箱号", "price": 9, "stock": 500, "description": "【推荐】注册满30-45天，模拟真实环境养号，权重稳定。支持更改资料、2FA安全验证，适合开通美区橱窗及Shop运营。" },
+    { "id": 2, "title": "美国-橱窗号 (1000真人粉)", "region": "us|hot|full-moon|all", "tag": "橱窗号", "price": 85, "stock": 120, "description": "【爆款】已开通TikTok橱窗功能，自带1000+真实活跃粉丝。由于带货门槛，到手即可直接挂载小黄车带货。" },
+    { "id": 3, "title": "英国-优质满月白号", "region": "uk|hot|full-moon|all", "tag": "邮箱号", "price": 12, "stock": 300, "description": "注册满30天，纯正英区原生住宅IP养号。适合开通英区TikTok Shop本土店或跨境店。" },
+    { "id": 5, "title": "全球通用-高质满月白号", "region": "hot|full-moon|all", "tag": "满月号", "price": 8, "stock": 999, "description": "德/法/意/西等随机发货，注册满30天，环境干净，适合批量采集数据或跑基础流量。" },
+    { "id": 6, "title": "高权重千粉号 (地区定制)", "region": "hot|full-moon|all", "tag": "千粉号", "price": 79, "stock": 200, "description": "粉丝1000+，无违规记录。可根据需求定制美、英、法、德等特定区域权重。" }
+  ]
+}
