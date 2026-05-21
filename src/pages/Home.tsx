@@ -52,10 +52,8 @@ import {
 } from 'lucide-react';
 
 import newsData from '@/data/news.json';
-
+import siteConfig from '@/data/site_config.json';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const MotionRouterLink = motion(Link);
 
 
 // 模拟案例数据
@@ -657,15 +655,11 @@ const HOME_SCHEMA = {
 export default function Home() {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
-  const statsRef = useRef<HTMLDivElement>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [statsVisible, setStatsVisible] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const closeMenu = () => setIsMenuOpen(false);
 
   // ✅ 埋点追踪函数
   const trackEvent = (eventName: string, properties?: any) => {
@@ -796,10 +790,10 @@ export default function Home() {
           <div className="container mx-auto flex items-center justify-center text-[10px] md:text-sm font-black tracking-tight gap-2 relative z-10">
             <Zap className="h-3 w-3 text-yellow-300 animate-pulse hidden sm:block" />
             <span className="flex items-center bg-white/20 px-2 py-0.5 rounded text-[8px] md:text-[10px] uppercase mr-1">Hot</span>
-            <span className="hidden sm:inline">满血gpt-5.5,0.06倍率，稳定0.1。可接入cursor,openclaw,hermes,opencode等编程工具</span>
-            <span className="sm:hidden text-[9px]">满血gpt-5.5,0.06倍率，稳定0.1</span>
+            <span className="hidden sm:inline">{siteConfig.promotion.text_desktop}</span>
+            <span className="sm:hidden text-[9px]">{siteConfig.promotion.text_mobile}</span>
             <a 
-              href="https://www.hstoken.cn/register?aff=VKXUR5QVBRLK" 
+              href={siteConfig.promotion.link} 
               target="_blank" 
               rel="noopener noreferrer"
               className="bg-yellow-400 text-blue-900 px-3 py-1 rounded-full font-black text-[9px] md:text-[11px] hover:bg-yellow-300 transition-all flex items-center shadow-sm ml-1"
@@ -839,13 +833,13 @@ export default function Home() {
               { text: '联系我们', href: '#联系我们' }
             ].map((item, index) => (
               item.isExternal ? (
-                <MotionRouterLink
+                <Link
                   key={index}
                   to={item.href}
                   className="text-gray-700 hover:text-pink-600 font-medium transition-colors"
                 >
                   {item.text}
-                </MotionRouterLink>
+                </Link>
               ) : (
                 <motion.a
                   key={index}
@@ -1465,6 +1459,95 @@ export default function Home() {
 
         </section>
 
+        {/* ✅ Q2 热门捆绑套餐 */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">🚀 Q2 热门捆绑套餐</h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                账号+爆品+策略一站式打包，助您快速进入 Q2 盈利赛道
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  title: "美区 3C 夏季黑科技包",
+                  price: "¥1280 起",
+                  tag: "热销",
+                  features: ["美区高权重千粉橱窗号", "Q2夏季数码爆品清单", "3C测评拍摄指南"],
+                  color: "from-blue-500 to-indigo-600",
+                  id: "us_3c_bundle"
+                },
+                {
+                  title: "中东家居奢华增长包",
+                  price: "¥599 起",
+                  tag: "高毛利",
+                  features: ["沙特/阿联酋权重号", "中东金系家居选品库", "阿拉伯语转化脚本模板"],
+                  color: "from-yellow-500 to-orange-600",
+                  id: "me_home_bundle"
+                },
+                {
+                  title: "全球选品截流增强包",
+                  price: "¥2980 起",
+                  tag: "推荐",
+                  features: ["3个满月高权重号", "跨平台爆品监测推荐", "首月 GEO 流量优化服务"],
+                  color: "from-pink-500 to-purple-600",
+                  id: "global_traffic_bundle"
+                }
+              ].map((bundle, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-100 flex flex-col"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -10 }}
+                >
+                  <div className={`h-2 bg-gradient-to-r ${bundle.color}`}></div>
+                  <div className="p-8 flex-grow">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-2xl font-bold">{bundle.title}</h3>
+                      <span className="bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full font-bold">
+                        {bundle.tag}
+                      </span>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900 mb-6">{bundle.price}</div>
+                    <ul className="space-y-3 mb-8">
+                      {bundle.features.map((feature, fIdx) => (
+                        <li key={fIdx} className="flex items-center text-gray-600">
+                          <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="p-8 pt-0">
+                    <motion.button
+                      onClick={() => {
+                        trackEvent('bundle_click', { bundle_id: bundle.id, bundle_name: bundle.title });
+                        navigate('/coaching-application');
+                      }}
+                      className={`w-full py-4 rounded-xl font-bold text-white bg-gradient-to-r ${bundle.color} shadow-lg`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      立即抢购
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* 热门教程 */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-purple-50">
 
@@ -1614,11 +1697,11 @@ export default function Home() {
 
               ].map((tutorial, index) => (
 
-                <MotionRouterLink
+                <motion.a
 
                   key={index}
 
-                  to={tutorial.url}
+                  href={tutorial.url}
 
                   className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
 
@@ -1650,7 +1733,7 @@ export default function Home() {
 
                   </div>
 
-                </MotionRouterLink>
+                </motion.a>
 
               ))}
 
@@ -3031,14 +3114,23 @@ export default function Home() {
               <div className="flex space-x-4">
 
                 {['facebook', 'twitter', 'instagram', 'youtube'].map((social) => (
+
                   <motion.a
+
                     key={social}
+
                     href="#"
+
                     className="bg-gray-800 p-2 rounded-full hover:bg-pink-600 transition-colors"
+
                     whileHover={{ scale: 1.1, rotate: 5 }}
+
                   >
+
                     <i className={`fa-brands fa-${social}`}></i>
+
                   </motion.a>
+
                 ))}
 
               </div>
@@ -3124,14 +3216,25 @@ export default function Home() {
                 <ul className="space-y-2">
 
                   {column.links.map((link, linkIndex) => (
+
                     <li key={linkIndex}>
-                      <Link
-                        to={typeof link === 'string' ? '#' : (link.url || '#')}
+
+                      <motion.a
+
+                        href={typeof link === 'string' ? '#' : link.url}
+
                         className="text-gray-400 hover:text-white transition-colors"
+
+                        whileHover={{ x: 5 }}
+
                       >
+
                         {typeof link === 'string' ? link : link.text}
-                      </Link>
+
+                      </motion.a>
+
                     </li>
+
                   ))}
 
                 </ul>
@@ -3154,9 +3257,9 @@ export default function Home() {
 
             <div className="flex space-x-6">
 
-              <Link 
+              <a 
 
-                to="/privacy-policy"
+                href="/privacy-policy"
 
                 target="_blank"
 
@@ -3168,11 +3271,11 @@ export default function Home() {
 
                 隐私政策
 
-              </Link>
+              </a>
 
-              <Link 
+              <a 
 
-                to="/terms-of-service" 
+                href="/terms-of-service" 
 
                 target="_blank"
 
@@ -3184,7 +3287,7 @@ export default function Home() {
 
                 服务条款
 
-              </Link>
+              </a>
 
               <a href="#" className="text-gray-400 hover:text-white transition-colors">Cookie政策</a>
 
