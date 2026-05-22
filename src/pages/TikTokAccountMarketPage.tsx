@@ -1,23 +1,162 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import marketConfig from '@/data/market_config.json';
 import { useAuth } from '@/contexts/authContext';
+import { useSEO } from '@/hooks/useSEO';
+import {
+  ChevronRight,
+  Volume2,
+  Bell,
+  Clock,
+  ShieldCheck,
+  TrendingUp,
+  Zap,
+  ExternalLink,
+  MessageSquare,
+  Globe,
+  Info,
+  CheckCircle2,
+  AlertTriangle,
+  Menu,
+  X,
+  CreditCard,
+  ShoppingCart,
+  LayoutDashboard,
+  LogOut,
+  User,
+  ArrowRight,
+  Search,
+  ChevronDown,
+  Gamepad2,
+  Mail
+} from 'lucide-react';
 
-// ─── 帮助中心与常见问题 (FAQ Schema 优化) ──────────────────────────
-const FAQ_DATA = [
-  {
-    question: "速锋科技的 TikTok 账号安全吗？",
-    answer: "非常安全。我们的账号均使用原生住宅 IP 注册，且注册时长均在 30 天（满月）以上。每个账号都经过严格的质量检测，支持 24 小时内首登问题包换。"
-  },
-  {
-    question: "什么是满月橱窗号？",
-    answer: "满月橱窗号是指注册时间超过 30 天，且已经通过 1000 粉丝门槛或特殊渠道开通了 TikTok Shop 橱窗权限的账号。这类账号权重高，适合直接带货。"
-  },
-  {
-    question: "购买后如何接收账号？",
-    answer: "在官网 TKTKX.cn 下单支付后，卡密信息会立即通过网页展示，并同步发送到您的联系邮箱。24 小时全自动发货。"
-  }
+// ─── 全平台分类数据 (根据用户提供图片) ───────────────────────
+const sideMenuSocial = [
+  { name: 'VKontakte', icon: '🌐' },
+  { name: 'GMail', icon: '✉️' },
+  { name: 'Twitter', icon: '🐦' },
+  { name: 'TikTok', icon: '🎵' },
+  { name: 'Lnkdn', icon: '💼' },
+  { name: 'Telegram', icon: '✈️' },
+  { name: 'Odnoklassniki', icon: '🆗' },
+  { name: 'Reddit', icon: '🤖' },
+  { name: 'Social Networks', icon: '👥', active: true },
 ];
+
+const sideMenuOther = [
+  { name: 'AI accounts' },
+  { name: 'Marketplace' },
+  { name: 'Snapchat' },
+  { name: 'Twitch' },
+  { name: 'Yelp' },
+  { name: 'Quora' },
+  { name: 'Pinterest' },
+  { name: 'Discord' },
+  { name: 'Roblox' },
+  { name: 'Brawl Stars' },
+  { name: 'Eternium' },
+  { name: 'Black Desert Mobile' },
+  { name: 'GTA5' },
+  { name: 'Clash Royale' },
+  { name: 'Epicgames.com' },
+  { name: 'Steam' },
+  { name: 'Other Email services' },
+  { name: 'Clash of Clans' },
+  { name: 'Game Accounts', highlight: true },
+];
+
+// ─── 账号购买数据 ───────────────────────────────────────────
+const accountCategories = [
+  { id: 'hot',        name: '热销爆款',       icon: '🔥' },
+  { id: 'full-moon',  name: '满月/千粉',      icon: '🌕' },
+  { id: 'us',         name: '美国区',         icon: '🇺🇸' },
+  { id: 'uk',         name: '英国区',         icon: '🇬🇧' },
+  { id: 'sea',        name: '东南亚',         icon: '🌏' },
+  { id: 'eu',         name: '欧洲区',         icon: '🇪🇺' },
+  { id: 'me',         name: '中东区',         icon: '🌙' },
+  { id: 'ads',        name: '广告/企业',      icon: '📊' },
+  { id: 'high-fan',   name: '高粉/基金',      icon: '📈' },
+  { id: 'all',        name: '全部账号',       icon: '🌐' },
+];
+
+const accountTypes = [
+  // ── 热销爆款 ──────────────────────────────────────────
+  { id: 1,   title: '美国-优质满月白号',         region: 'us|hot|full-moon|all', tag: '邮箱号',  price: 9,    stock: 500, description: '【推荐】注册满30-45天，模拟真实环境养号，权重稳定。支持更改资料、2FA安全验证，适合开通美区橱窗及Shop运营。' },
+  { id: 2,   title: '美国-橱窗号 (1000真人粉)',  region: 'us|hot|full-moon|all', tag: '橱窗号',  price: 85,   stock: 120, description: '【爆款】已开通TikTok橱窗功能，自带1000+真实活跃粉丝。由于带货门槛，到手即可直接挂载小黄车带货。' },
+  { id: 3,   title: '英国-优质满月白号',         region: 'uk|hot|full-moon|all', tag: '邮箱号',  price: 12,   stock: 300, description: '注册满30天，纯正英区原生住宅IP养号。适合开通英区TikTok Shop本土店或跨境店。' },
+  { id: 5,   title: '全球通用-高质满月白号',     region: 'hot|full-moon|all',    tag: '满月号',  price: 8,    stock: 999, description: '德/法/意/西等随机发货，注册满30天，环境干净，适合批量采集数据或跑基础流量。' },
+  { id: 6,   title: '高权重千粉号 (地区定制)',    region: 'hot|full-moon|all',    tag: '千粉号',  price: 79,   stock: 200, description: '粉丝1000+，无违规记录。可根据需求定制美、英、法、德等特定区域权重。' },
+
+  // ── 美国区专场 ────────────────────────────────────────
+  { id: 10,  title: '美国-5000粉高权重号',      region: 'us|high-fan|all',     tag: '高粉号',  price: 260,  stock: 30,  description: '【旗舰】自带5000+高质量真人粉丝，账号历史干净，权重极高，极易触发推荐系统流量爆发。' },
+  { id: 11,  title: '美区本土店(资料辅助号)',    region: 'us|ads|all',          tag: '店铺',    price: 350,  stock: 50,  description: '含美区本土店注册所需基础环境及账号，协助过审，适合深度布局美区Shop。' },
+  { id: 12,  title: '美区Ads企业投放账号',      region: 'us|ads|all',          tag: '广告号',  price: 180,  stock: 40,  description: 'TikTok Ads广告投放专用号，已过新手风控期，投放更加稳定，适合跑高消耗广告。' },
+
+  // ── 英国区专场 ────────────────────────────────────────
+  { id: 20,  title: '英国-5000粉商业号',        region: 'uk|high-fan|all',     tag: '高粉号',  price: 280,  stock: 20,  description: '英区5000+粉丝，粉丝画像精准。适合英国品牌出海、矩阵分发及本地获客。' },
+  { id: 21,  title: '英区资料本土店',           region: 'uk|ads|all',          tag: '店铺',    price: 420,  stock: 15,  description: '高稳定性英区本土店账号，包含全套售后支持，适合长期电商运营。' },
+
+  // ── 东南亚区 (SEA) ──────────────────────────────────
+  { id: 30,  title: '泰国-满月白号',            region: 'sea|all',             tag: '邮箱号',  price: 8,    stock: 400, description: '泰区注册满30天账号，环境干净，适合泰区短视频引流和矩阵起号。' },
+  { id: 31,  title: '泰国-橱窗号 (1000粉)',      region: 'sea|all',             tag: '橱窗号',  price: 72,   stock: 90,  description: '泰区千粉号，支持直接开通小黄车带货，东南亚热门电商市场首选。' },
+  { id: 36,  title: '马来西亚-满月白号',         region: 'sea|all',             tag: '邮箱号',  price: 9,    stock: 300, description: '马区注册满30天，权重稳定，适合马区电商运营起号。' },
+  { id: 37,  title: '马来西亚-橱窗号',           region: 'sea|all',             tag: '橱窗号',  price: 82,   stock: 50,  description: '马区千粉号，支持开通橱窗带货，粉丝活跃。' },
+
+  // ── 欧洲区 (EU) ────────────────────────────────────────
+  { id: 50,  title: '德国-权重满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 120, description: '德区权重满月号，适合针对高净值德语用户进行内容创作。' },
+  { id: 51,  title: '法国-权重满月白号',         region: 'eu|all',              tag: '邮箱号',  price: 14,   stock: 130, description: '法区权重满月号，适合时尚、美妆等品类在法国市场的推广。' },
+
+  // ── 中东区 (ME) ────────────────────────────────────────
+  { id: 90,  title: '沙特-权重满月白号',         region: 'me|all',              tag: '邮箱号',  price: 18,   stock: 150, description: '沙特区权重号，中东土豪金区，流量价值极高。' },
+  { id: 91,  title: '沙特-1000粉橱窗号',         region: 'me|all',              tag: '橱窗号',  price: 128,  stock: 30,  description: '沙特橱窗号，高客单价蓝海市场带货神器。' },
+
+  // ── 特色账号 ──────────────────────────────────────────
+  { id: 180, title: 'TikTok 1万粉 (创作基金号)',  region: 'high-fan|all',         tag: '基金号',  price: 850,  stock: 10,  description: '【旗舰精品】自带1万真实粉丝，已成功开通Creator Fund，视频播放即可产生美金收益。' },
+];
+
+const accountInfoItems = [
+  { Icon: Clock,       label: '自动发货', desc: '秒速交付' },
+  { Icon: ShieldCheck, label: '24H售后',  desc: '安全保障' },
+  { Icon: TrendingUp,  label: '高权重',  desc: '原生环境' },
+  { Icon: Zap,         label: '30天+',   desc: '注册时长' },
+];
+
+// ─── 增粉服务数据 ───────────────────────────────────────────
+const socialPlatforms = [
+  { id: 'tiktok',    name: 'TikTok',    emoji: '🎵' },
+  { id: 'instagram', name: 'Instagram', emoji: '📷' },
+  { id: 'facebook',  name: 'Facebook',  emoji: '👤' },
+  { id: 'youtube',   name: 'YouTube',   emoji: '▶️' },
+  { id: 'twitter',   name: 'Twitter/X', emoji: '🐦' },
+];
+
+const servicesByPlatform: Record<string, { id: number; name: string; price: number; min: number; max: number }[]> = {
+  tiktok: [
+    { id: 4858, name: 'TikTok 粉丝 | 真实头像粉 | 极速启动', price: 12.87, min: 100, max: 100000 },
+    { id: 4859, name: 'TikTok 点赞 | 真人交互 | 稳定不掉', price: 3.5,   min: 100, max: 50000  },
+    { id: 4860, name: 'TikTok 播放量 | 万次起刷 | 提升权重', price: 0.12,  min: 1000, max: 5000000 },
+  ],
+  instagram: [
+    { id: 5001, name: 'Instagram 粉丝 | 全球真人粉', price: 18.5, min: 100, max: 50000 },
+    { id: 5002, name: 'Instagram 点赞 | 快速提升曝光', price: 5.0,  min: 100, max: 10000 },
+  ],
+  facebook: [
+    { id: 6001, name: 'Facebook 主页赞/关注 | 真人用户', price: 22.0, min: 100, max: 10000 },
+  ],
+  youtube: [
+    { id: 7001, name: 'YouTube 订阅 | 稳定真人订阅', price: 28.0, min: 100, max: 20000 },
+  ],
+  twitter:   [{ id: 8001,  name: 'Twitter(X) 粉丝 | 精准账号关注', price: 20.0, min: 100, max: 50000 }],
+};
+
+const socialInfoItems = [
+  { Icon: Clock,       label: '1-3小时', desc: '平均启动' },
+  { Icon: ShieldCheck, label: '包补机制', desc: '掉粉包补' },
+  { Icon: Zap,         label: '24/7',    desc: '全天运行' },
+  { Icon: Globe,       label: '全球',    desc: '用户覆盖' },
+];
+
+type Mode = 'account' | 'social';
 
 export default function TikTokAccountMarketPage() {
   const navigate = useNavigate();
@@ -30,6 +169,7 @@ export default function TikTokAccountMarketPage() {
   const [selectedServiceId, setSelectedServiceId] = useState(4858);
   const [socialQty, setSocialQty]                 = useState(1000);
   const [isMenuOpen, setIsMenuOpen]               = useState(false);
+  const [isPaying, setIsPaying]                   = useState(false);
 
   // GEO 优化：结构化数据
   const MARKET_SCHEMA = {
@@ -71,6 +211,14 @@ export default function TikTokAccountMarketPage() {
     }
     el.textContent = JSON.stringify(MARKET_SCHEMA);
     return () => { document.getElementById(scriptId)?.remove(); };
+  }, []);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('pay') === 'success') {
+      alert('支付成功！系统正在处理您的订单，请稍后在个人中心查看或联系客服。');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   // ─── 全平台分类菜单组件 ───
@@ -149,44 +297,11 @@ export default function TikTokAccountMarketPage() {
     : ((selectedService?.price || 0) * socialQty / 1000);
 
   useSEO({
-    title: 'TikTok账号市场 | 购买千粉橱窗号、满月老号 - 速锋科技',
-    description: '速锋科技提供高权重TikTok美国/英国/东南亚满月老号、1000粉丝橱窗号。原生住宅IP养号，稳定不跳验证，24小时自动发货。',
-    keywords: '买TikTok账号,TikTok橱窗号,TikTok千粉号,TikTok满月老号,速锋科技',
-    canonical: 'https://www.tktkx.cn/tiktok-market'
+    title: 'TikTok账号购买 | TK千粉/白号批发 - 24H自动发货 - 速锋科技',
+    description: '专业TikTok账号购买平台，提供美区/英区满月白号、橱窗号（1000粉）、店铺开通，以及TikTok/Instagram/YouTube等平台增粉点赞服务。',
+    canonical: 'https://www.tktkx.cn/tiktok-market',
+    keywords: 'TikTok账号购买,TK千粉,白号批发,24H自动发货,美区新号,英区满月号,橱窗号购买,TikTok成品号,2FA验证账号',
   });
-
-  // ✅ 注入 FAQPage 结构化数据 (GEO 优化)
-  useEffect(() => {
-    const faqSchema = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": FAQ_DATA.map(item => ({
-        "@type": "Question",
-        "name": item.question,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": item.answer
-        }
-      }))
-    };
-
-    const injectSchema = (schema: object, scriptId: string) => {
-      let el = document.getElementById(scriptId);
-      if (!el) {
-        el = document.createElement('script');
-        el.id = scriptId;
-        (el as HTMLScriptElement).type = 'application/ld+json';
-        document.head.appendChild(el);
-      }
-      el.textContent = JSON.stringify(schema);
-    };
-
-    injectSchema(faqSchema, 'market-faq-schema');
-    return () => {
-      const el = document.getElementById('market-faq-schema');
-      if (el) el.remove();
-    };
-  }, []);
 
   const handlePlatformChange = (id: string) => {
     setSelectedPlatform(id);
@@ -194,6 +309,39 @@ export default function TikTokAccountMarketPage() {
     if (services.length > 0) {
       setSelectedServiceId(services[0].id);
       setSocialQty(services[0].min);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (isPaying) return;
+    setIsPaying(true);
+    
+    try {
+      const goodsName = mode === 'account' 
+        ? `${selectedAccount.title} x ${quantity}` 
+        : `${selectedService?.name} (Qty: ${socialQty})`;
+        
+      const response = await fetch('/api/pay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: goodsName,
+          money: totalPrice.toFixed(2),
+          type: 'alipay'
+        })
+      });
+      
+      const data = await response.json();
+      if (data.ok && data.pay_url) {
+        window.location.href = data.pay_url;
+      } else {
+        alert('支付生成失败: ' + (data.error || '未知错误'));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('支付请求出错，请检查网络或联系客服');
+    } finally {
+      setIsPaying(false);
     }
   };
 
@@ -205,8 +353,12 @@ export default function TikTokAccountMarketPage() {
           <p className="text-[10px] text-gray-400 font-bold uppercase">总计费用</p>
           <p className="text-2xl font-black text-blue-600">¥ {totalPrice.toFixed(2)}</p>
         </div>
-        <button className="bg-blue-600 text-white px-8 py-3.5 rounded-xl font-black text-sm flex items-center shadow-lg shadow-blue-100 active:scale-95 transition-transform">
-          立即购买 <ChevronRight className="h-4 w-4 ml-1" />
+        <button 
+          onClick={handleCheckout}
+          disabled={isPaying}
+          className={`${isPaying ? 'bg-gray-400' : 'bg-blue-600'} text-white px-8 py-3.5 rounded-xl font-black text-sm flex items-center shadow-lg shadow-blue-100 active:scale-95 transition-transform`}
+        >
+          {isPaying ? '处理中...' : '立即购买'} <ChevronRight className="h-4 w-4 ml-1" />
         </button>
       </div>
 
@@ -367,8 +519,12 @@ export default function TikTokAccountMarketPage() {
                           支付完成后<br />系统自动发货
                         </div>
                       </div>
-                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-2xl py-5 font-black text-lg shadow-xl shadow-blue-100 transition-all transform active:scale-[0.98] flex items-center justify-center">
-                        立即下单购买 <ArrowRight className="h-5 w-5 ml-2" />
+                      <button 
+                        onClick={handleCheckout}
+                        disabled={isPaying}
+                        className={`w-full ${isPaying ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-2xl py-5 font-black text-lg shadow-xl shadow-blue-100 transition-all transform active:scale-[0.98] flex items-center justify-center`}
+                      >
+                        {isPaying ? '正在跳转支付...' : '立即下单购买'} <ArrowRight className="h-5 w-5 ml-2" />
                       </button>
                     </div>
                   </div>
