@@ -11,7 +11,7 @@
 - [首页 (Home)](https://www.tktkx.cn/) - 速锋科技品牌概览与核心服务。
 - [账号市场 (TikTok Market)](https://www.tktkx.cn/tiktok-market) - 实时账号库存与增粉服务价格。
 - [GEO 优化服务](https://www.tktkx.cn/geo-marketing) - AI 搜索营销详细方案与报价。
-- [行业资讯 (News)](https://www.tktkx.cn/news) - 最新的 TikTok 运营与 AI 营销干货。近期重点：AI Agent 驱动全自动矩阵运营、AI 搜索时代下的社交搜索突围、AI Agent 驱动零库存分销、TikTok 算法去中心化趋势。
+- [行业资讯 (News)](https://www.tktkx.cn/news) - 最新的 TikTok 运营与 AI 营销干货。近期重点：AI 虚拟人直播 24/7 获客、GEO 引用权重优化、AI Agent 驱动全自动矩阵运营、AI 搜索时代下的社交搜索突围。
 
 ## 实体关系 (Entities)
 - **Organization**: 速锋科技 (TKTKX)
