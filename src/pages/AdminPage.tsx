@@ -38,12 +38,16 @@ export default function AdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
 
-  // 检查本地缓存的 Key
+  // 检查本地缓存或 URL 参数中的 Key
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlKey = urlParams.get('key');
     const savedKey = localStorage.getItem('tktkx_admin_key');
-    if (savedKey) {
-      setAdminKey(savedKey);
-      verifyAndFetch(savedKey);
+    
+    const keyToTry = urlKey || savedKey;
+    if (keyToTry) {
+      setAdminKey(keyToTry);
+      verifyAndFetch(keyToTry);
     } else {
       setLoading(false);
     }
@@ -52,17 +56,20 @@ export default function AdminPage() {
   const verifyAndFetch = async (key: string) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/manage', {
-        headers: { 'x-admin-key': key }
-      });
+      // 尝试通过 Query Param 验证，兼容性更好
+      const res = await fetch(`/api/admin/manage?key=${encodeURIComponent(key)}`);
       if (res.ok) {
         const data = await res.json();
         setProducts(data);
         setIsAuthenticated(true);
         localStorage.setItem('tktkx_admin_key', key);
+        // 清理 URL 参数
+        window.history.replaceState({}, '', window.location.pathname);
       } else {
+        const errorData = await res.json();
+        console.error('Auth Debug:', errorData.debug);
         localStorage.removeItem('tktkx_admin_key');
-        toast.error('认证失败，请检查密钥');
+        toast.error(`认证失败: ${errorData.error}`);
       }
     } catch (err) {
       toast.error('服务器连接失败');
