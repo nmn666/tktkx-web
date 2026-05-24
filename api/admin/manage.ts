@@ -3,10 +3,10 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY!
 );
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || 'tktkx_admin_888';
+const ADMIN_SECRET = (process.env.ADMIN_SECRET_KEY || 'tktkx_admin_888').trim();
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,10 +15,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // 基础身份验证
-  const adminKey = req.headers['x-admin-key'];
+  // 基础身份验证 (支持不分大小写的 header 读取)
+  const adminKey = (req.headers['x-admin-key'] as string || '').trim();
+  
   if (adminKey !== ADMIN_SECRET) {
-    return res.status(401).json({ error: 'Unauthorized: Invalid Admin Key' });
+    console.error(`[Auth Failed] Received: "${adminKey}", Expected: "${ADMIN_SECRET}"`);
+    return res.status(401).json({ 
+      error: 'Unauthorized: Invalid Admin Key',
+      hint: 'Please check your ADMIN_SECRET_KEY in Vercel environment variables.'
+    });
   }
 
   try {
