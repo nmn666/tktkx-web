@@ -15,7 +15,7 @@
 
 ## 实体关系 (Entities)
 - **Organization**: 速锋科技 (TKTKX)
-- **Services**: TikTok Account Sales, GEO Optimization, Social Media Marketing.
+- **Services**: TikTok Account Sales, GEO Optimization, Social Media Marketing, Overseas Payment & Procurement (Credit Card).
 - **Keywords**: TikTok 账号购买, TK 千粉号, 橱窗号, DeepSeek 优化, AI 搜索推荐.
 
 ## 联系方式
