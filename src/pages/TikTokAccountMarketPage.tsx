@@ -181,6 +181,33 @@ export default function TikTokAccountMarketPage() {
   const [socialQty, setSocialQty]                 = useState(1000);
   const [isMenuOpen, setIsMenuOpen]               = useState(false);
   const [isPaying, setIsPaying]                   = useState(false);
+  const [dynamicProducts, setDynamicProducts]     = useState<any[]>([]);
+  const [loadingProducts, setLoadingProducts]     = useState(true);
+
+  // 从后端 API 获取实时商品数据
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoadingProducts(true);
+      try {
+        const res = await fetch(`/api/products?category=${selectedCategory}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            setDynamicProducts(data);
+          } else {
+            setDynamicProducts(accountTypes);
+          }
+        } else {
+          setDynamicProducts(accountTypes);
+        }
+      } catch (err) {
+        setDynamicProducts(accountTypes);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+    fetchProducts();
+  }, [selectedCategory]);
 
   // GEO 优化：结构化数据
   const MARKET_SCHEMA = {
@@ -291,13 +318,13 @@ export default function TikTokAccountMarketPage() {
   );
 
   const filteredAccountTypes = useMemo(() => 
-    accountTypes.filter(a => a.region.split('|').includes(selectedCategory)),
-    [selectedCategory]
+    dynamicProducts.filter(a => a.region.split('|').includes(selectedCategory)),
+    [selectedCategory, dynamicProducts]
   );
 
   const selectedAccount = useMemo(() => 
-    accountTypes.find(a => a.id === selectedAccountId) || filteredAccountTypes[0] || accountTypes[0],
-    [selectedAccountId, filteredAccountTypes]
+    dynamicProducts.find(a => a.id === selectedAccountId) || filteredAccountTypes[0] || dynamicProducts[0],
+    [selectedAccountId, filteredAccountTypes, dynamicProducts]
   );
 
   const currentServices = servicesByPlatform[selectedPlatform] || [];
