@@ -76,6 +76,7 @@ const accountCategories = [
   { id: 'me',         name: '中东区',         icon: '🌙' },
   { id: 'ads',        name: '广告/企业',      icon: '📊' },
   { id: 'high-fan',   name: '高粉/基金',      icon: '📈' },
+  { id: 'payment',    name: '代付代购',       icon: '💳' },
   { id: 'all',        name: '全部账号',       icon: '🌐' },
 ];
 
@@ -112,6 +113,16 @@ const accountTypes = [
 
   // ── 特色账号 ──────────────────────────────────────────
   { id: 180, title: 'TikTok 1万粉 (创作基金号)',  region: 'high-fan|all',         tag: '基金号',  price: 850,  stock: 10,  description: '【旗舰精品】自带1万真实粉丝，已成功开通Creator Fund，视频播放即可产生美金收益。' },
+  // ── 增值服务 (代付代购) ──────────────────────────────────
+  { 
+    id: 200, 
+    title: '代付代购服务｜信用卡支付', 
+    region: 'payment|hot|all', 
+    tag: '支付服务', 
+    price: 1, 
+    stock: 9999, 
+    description: '支持多种网站支付、缴费、充值、订阅、赞助等服务。全程安全保障，提供安全支付方式；提供扣款证明，确保交易透明无忧。全程协助服务，确保顺利完成交易。注：本服务仅限于合法合规的支付用途，下单前请先联系客服咨询金额！' 
+  },
 ];
 
 const accountInfoItems = [
