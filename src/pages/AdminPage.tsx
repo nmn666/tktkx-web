@@ -1,252 +1,431 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/authContext';
-import { supabase } from '@/storage/database/supabase-client';
-import {
-  Users,
-  Search,
-  RefreshCw,
-  LogOut,
-  ArrowLeft,
-  Calendar,
-  Mail,
-  User,
-  ShieldAlert,
-  Download,
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  LayoutDashboard, 
+  Package, 
+  Plus, 
+  Settings, 
+  LogOut, 
+  Edit2, 
+  Trash2, 
+  Save, 
+  X,
+  Eye,
+  EyeOff,
+  CheckCircle,
+  AlertCircle,
+  DollarSign,
+  Box
 } from 'lucide-react';
+import { toast, Toaster } from 'sonner';
 
-interface UserProfile {
-  id: string;
-  username: string;
-  email: string;
-  created_at: string;
+interface Product {
+  id: number;
+  title: string;
+  region: string;
+  tag: string;
+  price: number;
+  stock: number;
+  description: string;
+  is_active: boolean;
 }
 
 export default function AdminPage() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminKey, setAdminKey] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
 
-  const [users, setUsers]       = useState<UserProfile[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [search, setSearch]     = useState('');
-  const [error, setError]       = useState('');
-
-  // 权限检查：非管理员踢出
+  // 检查本地缓存的 Key
   useEffect(() => {
-    if (!user) { navigate('/login'); return; }
-    if (!user.isAdmin) { navigate('/'); return; }
-  }, [user, navigate]);
-
-  // 加载用户列表
-  const fetchUsers = async () => {
-    setLoading(true);
-    setError('');
-    const { data, error: err } = await supabase
-      .from('user_profiles')
-      .select('id, username, email, created_at')
-      .order('created_at', { ascending: false });
-
-    if (err) {
-      setError('加载失败：' + err.message);
+    const savedKey = localStorage.getItem('tktkx_admin_key');
+    if (savedKey) {
+      setAdminKey(savedKey);
+      verifyAndFetch(savedKey);
     } else {
-      setUsers(data || []);
+      setLoading(false);
     }
-    setLoading(false);
+  }, []);
+
+  const verifyAndFetch = async (key: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/manage', {
+        headers: { 'x-admin-key': key }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProducts(data);
+        setIsAuthenticated(true);
+        localStorage.setItem('tktkx_admin_key', key);
+      } else {
+        localStorage.removeItem('tktkx_admin_key');
+        toast.error('认证失败，请检查密钥');
+      }
+    } catch (err) {
+      toast.error('服务器连接失败');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => {
-    if (user?.isAdmin) fetchUsers();
-  }, [user]);
-
-  // 搜索过滤
-  const filtered = users.filter(u =>
-    u.username.toLowerCase().includes(search.toLowerCase()) ||
-    u.email.toLowerCase().includes(search.toLowerCase())
-  );
-
-  // 导出 CSV
-  const exportCSV = () => {
-    const rows = [
-      ['用户名', '邮箱', '注册时间'],
-      ...filtered.map(u => [u.username, u.email, new Date(u.created_at).toLocaleString('zh-CN')]),
-    ];
-    const csv = rows.map(r => r.join(',')).join('\n');
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `用户列表_${new Date().toLocaleDateString('zh-CN')}.csv`;
-    a.click();
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    verifyAndFetch(adminKey);
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/');
+  const handleLogout = () => {
+    localStorage.removeItem('tktkx_admin_key');
+    setIsAuthenticated(false);
+    setProducts([]);
   };
 
-  if (!user?.isAdmin) return null;
+  const handleToggleActive = async (product: Product) => {
+    try {
+      const res = await fetch('/api/admin/manage', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-admin-key': adminKey 
+        },
+        body: JSON.stringify({ id: product.id, is_active: !product.is_active })
+      });
+      if (res.ok) {
+        setProducts(products.map(p => p.id === product.id ? { ...p, is_active: !p.is_active } : p));
+        toast.success(product.is_active ? '商品已下架' : '商品已上架');
+      }
+    } catch (err) {
+      toast.error('操作失败');
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('确定要删除该商品吗？')) return;
+    try {
+      const res = await fetch(`/api/admin/manage?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-key': adminKey }
+      });
+      if (res.ok) {
+        setProducts(products.filter(p => p.id !== id));
+        toast.success('删除成功');
+      }
+    } catch (err) {
+      toast.error('删除失败');
+    }
+  };
+
+  const handleSaveProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+
+    const method = editingProduct.id ? 'PUT' : 'POST';
+    try {
+      const res = await fetch('/api/admin/manage', {
+        method,
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-admin-key': adminKey 
+        },
+        body: JSON.stringify(editingProduct)
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        if (method === 'POST') {
+          setProducts([...products, saved]);
+        } else {
+          setProducts(products.map(p => p.id === saved.id ? saved : p));
+        }
+        setIsModalOpen(false);
+        setEditingProduct(null);
+        toast.success('保存成功');
+      }
+    } catch (err) {
+      toast.error('保存失败');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 flex items-center justify-center px-4">
+        <Toaster position="top-center" />
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/20 w-full max-w-md"
+        >
+          <div className="text-center mb-8">
+            <div className="inline-flex p-3 bg-blue-500 rounded-xl mb-4 shadow-lg">
+              <Settings className="text-white w-8 h-8" />
+            </div>
+            <h1 className="text-3xl font-bold text-white">速锋后台管理</h1>
+            <p className="text-blue-200 mt-2">请输入管理员密钥以继续</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <input
+                type="password"
+                value={adminKey}
+                onChange={(e) => setAdminKey(e.target.value)}
+                placeholder="管理密钥 (Admin Key)"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-900/20 transition-all"
+            >
+              登录控制台
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#f0f2f5]">
-      {/* 顶栏 */}
-      <header className="bg-[#1a56db] text-white py-3 px-6 flex items-center justify-between shadow-md">
-        <div className="flex items-center space-x-4">
-          <Link to="/" className="flex items-center hover:text-blue-200 transition-colors">
-            <ArrowLeft className="h-5 w-5 mr-1" />
-            <span className="text-sm">返回网站</span>
-          </Link>
-          <div className="w-[1px] h-4 bg-blue-400" />
-          <div className="flex items-center">
-            <ShieldAlert className="h-5 w-5 mr-2" />
-            <span className="font-bold text-lg">速锋科技 · 管理后台</span>
+    <div className="min-h-screen bg-gray-50 flex">
+      <Toaster position="top-right" />
+      
+      {/* Sidebar */}
+      <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
+        <div className="p-6 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <Package className="text-white w-5 h-5" />
+            </div>
+            <span className="font-black text-xl text-gray-900">速锋管理端</span>
           </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-blue-200">管理员：{user.username}</span>
-          <button
+        
+        <nav className="flex-1 p-4 space-y-1">
+          <a href="#" className="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold">
+            <LayoutDashboard size={20} /> 商品管理
+          </a>
+          {/* 更多菜单项可在此添加 */}
+        </nav>
+
+        <div className="p-4 border-t border-gray-100">
+          <button 
             onClick={handleLogout}
-            className="flex items-center text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-all"
+            className="flex items-center gap-3 w-full px-4 py-3 text-gray-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all"
           >
-            <LogOut className="h-4 w-4 mr-1" /> 退出
+            <LogOut size={20} /> 退出登录
           </button>
         </div>
-      </header>
+      </aside>
 
-      <main className="max-w-[1100px] mx-auto py-8 px-4">
-        {/* 统计卡片 */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          {[
-            { label: '注册用户总数', value: users.length, icon: Users, color: 'text-blue-600 bg-blue-50' },
-            { label: '今日注册', value: users.filter(u => new Date(u.created_at).toDateString() === new Date().toDateString()).length, icon: Calendar, color: 'text-green-600 bg-green-50' },
-            { label: '搜索结果', value: filtered.length, icon: Search, color: 'text-purple-600 bg-purple-50' },
-          ].map((card, i) => (
-            <div key={i} className="bg-white rounded-xl border border-[#eef1f6] shadow-sm p-5 flex items-center">
-              <div className={`p-3 rounded-xl mr-4 ${card.color}`}>
-                <card.icon className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-800">{card.value}</p>
-                <p className="text-sm text-gray-500">{card.label}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+          <h2 className="text-lg font-bold text-gray-800">商品库存列表</h2>
+          <button 
+            onClick={() => {
+              setEditingProduct({ is_active: true, price: 0, stock: 100 });
+              setIsModalOpen(true);
+            }}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all"
+          >
+            <Plus size={18} /> 上架新商品
+          </button>
+        </header>
 
-        {/* 用户列表卡片 */}
-        <div className="bg-white rounded-xl border border-[#eef1f6] shadow-sm">
-          {/* 工具栏 */}
-          <div className="p-5 border-b border-[#f0f2f5] flex items-center justify-between">
-            <h2 className="font-bold text-gray-800 flex items-center">
-              <Users className="h-5 w-5 mr-2 text-[#1a56db]" /> 注册用户列表
-            </h2>
-            <div className="flex items-center space-x-3">
-              {/* 搜索框 */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
-                  type="text"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  placeholder="搜索用户名或邮箱…"
-                  className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:border-blue-400 w-52"
-                />
-              </div>
-              {/* 刷新 */}
-              <button
-                onClick={fetchUsers}
-                disabled={loading}
-                className="flex items-center text-sm bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg transition-all disabled:opacity-50"
-              >
-                <RefreshCw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} /> 刷新
-              </button>
-              {/* 导出 CSV */}
-              <button
-                onClick={exportCSV}
-                className="flex items-center text-sm bg-[#1a56db] text-white hover:bg-[#154ec1] px-3 py-2 rounded-lg transition-all"
-              >
-                <Download className="h-4 w-4 mr-1" /> 导出CSV
-              </button>
-            </div>
-          </div>
-
-          {/* 表格 */}
-          <div className="overflow-x-auto">
-            {error ? (
-              <div className="p-8 text-center text-red-500">{error}</div>
-            ) : loading ? (
-              <div className="p-12 flex flex-col items-center text-gray-400">
-                <RefreshCw className="h-8 w-8 animate-spin mb-3" />
-                <span>加载中…</span>
-              </div>
-            ) : filtered.length === 0 ? (
-              <div className="p-12 text-center text-gray-400">
-                <Users className="h-10 w-10 mx-auto mb-3 opacity-40" />
-                <p>{search ? '没有找到匹配的用户' : '暂无注册用户'}</p>
-              </div>
-            ) : (
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-[#f8f9fb] border-b border-[#f0f2f5]">
-                    <th className="text-left px-5 py-3 text-gray-500 font-medium">#</th>
-                    <th className="text-left px-5 py-3 text-gray-500 font-medium">
-                      <span className="flex items-center"><User className="h-4 w-4 mr-1.5" />用户名</span>
-                    </th>
-                    <th className="text-left px-5 py-3 text-gray-500 font-medium">
-                      <span className="flex items-center"><Mail className="h-4 w-4 mr-1.5" />邮箱</span>
-                    </th>
-                    <th className="text-left px-5 py-3 text-gray-500 font-medium">
-                      <span className="flex items-center"><Calendar className="h-4 w-4 mr-1.5" />注册时间</span>
-                    </th>
-                    <th className="text-left px-5 py-3 text-gray-500 font-medium">用户ID</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((u, i) => (
-                    <tr key={u.id} className="border-b border-[#f5f7fa] hover:bg-[#fafbff] transition-colors">
-                      <td className="px-5 py-3.5 text-gray-400">{i + 1}</td>
-                      <td className="px-5 py-3.5">
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 text-white flex items-center justify-center font-bold text-sm mr-3 flex-shrink-0">
-                            {u.username.charAt(0).toUpperCase()}
-                          </div>
-                          <span className="font-medium text-gray-800">{u.username}</span>
+        <div className="flex-1 overflow-y-auto p-6">
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-gray-50 text-gray-500 text-xs font-black uppercase tracking-wider">
+                <tr>
+                  <th className="px-6 py-4">商品信息</th>
+                  <th className="px-6 py-4">分类/标签</th>
+                  <th className="px-6 py-4">价格/库存</th>
+                  <th className="px-6 py-4">状态</th>
+                  <th className="px-6 py-4 text-right">操作</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                <AnimatePresence>
+                  {products.map((p) => (
+                    <motion.tr 
+                      key={p.id}
+                      layout
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="hover:bg-gray-50/50 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="font-bold text-gray-900">{p.title}</div>
+                        <div className="text-sm text-gray-500 truncate max-w-xs">{p.description}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap gap-1">
+                          <span className="bg-blue-50 text-blue-600 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                            {p.region}
+                          </span>
+                          <span className="bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                            {p.tag}
+                          </span>
                         </div>
                       </td>
-                      <td className="px-5 py-3.5 text-gray-600">{u.email}</td>
-                      <td className="px-5 py-3.5 text-gray-500">
-                        {new Date(u.created_at).toLocaleString('zh-CN', {
-                          year: 'numeric', month: '2-digit', day: '2-digit',
-                          hour: '2-digit', minute: '2-digit'
-                        })}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1 text-gray-900 font-bold">
+                          <DollarSign size={14} className="text-gray-400" /> {p.price}
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+                          <Box size={12} /> {p.stock}
+                        </div>
                       </td>
-                      <td className="px-5 py-3.5 text-gray-300 text-xs font-mono truncate max-w-[120px]">
-                        {u.id.slice(0, 8)}…
+                      <td className="px-6 py-4">
+                        <button 
+                          onClick={() => handleToggleActive(p)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                            p.is_active 
+                              ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          }`}
+                        >
+                          {p.is_active ? <Eye size={12} /> : <EyeOff size={12} />}
+                          {p.is_active ? '已上架' : '已下架'}
+                        </button>
                       </td>
-                    </tr>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          <button 
+                            onClick={() => {
+                              setEditingProduct(p);
+                              setIsModalOpen(true);
+                            }}
+                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(p.id)}
+                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
                   ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-
-          {/* 底部 */}
-          {!loading && filtered.length > 0 && (
-            <div className="px-5 py-3 border-t border-[#f0f2f5] text-xs text-gray-400">
-              共 {filtered.length} 条记录{search ? `（筛选自 ${users.length} 条）` : ''}
-              &nbsp;·&nbsp;密码由 Supabase Auth bcrypt 加密，管理员不可查看明文密码
-            </div>
-          )}
-        </div>
-
-        {/* 安全说明 */}
-        <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 flex items-start">
-          <ShieldAlert className="h-5 w-5 mr-3 flex-shrink-0 mt-0.5 text-amber-600" />
-          <div>
-            <p className="font-semibold mb-1">密码安全说明</p>
-            <p>所有用户密码均由 Supabase Auth 使用 <strong>bcrypt</strong> 哈希算法加密存储，任何人（包括管理员）均无法查看用户的明文密码。如需重置密码，可在 Supabase 控制台操作。</p>
+                </AnimatePresence>
+              </tbody>
+            </table>
           </div>
         </div>
       </main>
+
+      {/* Product Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden"
+          >
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+              <h3 className="text-xl font-bold">{editingProduct?.id ? '编辑商品' : '新增商品'}</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSaveProduct} className="p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label className="block text-sm font-bold text-gray-700 mb-1">商品标题</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProduct?.title || ''}
+                    onChange={e => setEditingProduct({ ...editingProduct, title: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">分类 (region)</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="如: us|hot|all"
+                    value={editingProduct?.region || ''}
+                    onChange={e => setEditingProduct({ ...editingProduct, region: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">标签 (tag)</label>
+                  <input
+                    type="text"
+                    placeholder="如: 满月老号"
+                    value={editingProduct?.tag || ''}
+                    onChange={e => setEditingProduct({ ...editingProduct, tag: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">价格 (¥)</label>
+                  <input
+                    type="number"
+                    required
+                    value={editingProduct?.price || 0}
+                    onChange={e => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })}
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">库存</label>
+                  <input
+                    type="number"
+                    required
+                    value={editingProduct?.stock || 0}
+                    onChange={e => setEditingProduct({ ...editingProduct, stock: Number(e.target.value) })}
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-bold text-gray-700 mb-1">商品描述</label>
+                  <textarea
+                    rows={3}
+                    value={editingProduct?.description || ''}
+                    onChange={e => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="flex-1 px-4 py-3 border border-gray-200 text-gray-600 rounded-xl font-bold hover:bg-gray-50 transition-all"
+                >
+                  取消
+                </button>
+                <button
+                  type="submit"
+                  className="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-900/10 transition-all"
+                >
+                  保存并上架
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
