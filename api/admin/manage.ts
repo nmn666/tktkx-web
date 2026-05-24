@@ -15,14 +15,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // 基础身份验证 (支持不分大小写的 header 读取)
-  const adminKey = (req.headers['x-admin-key'] as string || '').trim();
+  // 基础身份验证 (同时支持 Header 和 Query 参数作为备选)
+  const adminKey = (req.headers['x-admin-key'] as string || req.query.key as string || '').trim();
   
   if (adminKey !== ADMIN_SECRET) {
-    console.error(`[Auth Failed] Received: "${adminKey}", Expected: "${ADMIN_SECRET}"`);
     return res.status(401).json({ 
       error: 'Unauthorized: Invalid Admin Key',
-      hint: 'Please check your ADMIN_SECRET_KEY in Vercel environment variables.'
+      debug: {
+        receivedLength: adminKey.length,
+        expectedLength: ADMIN_SECRET.length,
+        method: req.method
+      }
     });
   }
 
