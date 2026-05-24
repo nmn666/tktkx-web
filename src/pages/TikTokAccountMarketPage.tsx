@@ -181,7 +181,7 @@ export default function TikTokAccountMarketPage() {
   const [socialQty, setSocialQty]                 = useState(1000);
   const [isMenuOpen, setIsMenuOpen]               = useState(false);
   const [isPaying, setIsPaying]                   = useState(false);
-  const [dynamicProducts, setDynamicProducts]     = useState<any[]>([]);
+  const [dynamicProducts, setDynamicProducts]     = useState<any[]>(accountTypes);
   const [loadingProducts, setLoadingProducts]     = useState(true);
 
   // 从后端 API 获取实时商品数据
@@ -331,7 +331,7 @@ export default function TikTokAccountMarketPage() {
   const selectedService = currentServices.find(s => s.id === selectedServiceId) || currentServices[0];
 
   const totalPrice = mode === 'account' 
-    ? (selectedAccount.price * quantity) 
+    ? ((selectedAccount?.price || 0) * quantity) 
     : ((selectedService?.price || 0) * socialQty / 1000);
 
   useSEO({
@@ -356,7 +356,7 @@ export default function TikTokAccountMarketPage() {
     
     try {
       const goodsName = mode === 'account' 
-        ? `${selectedAccount.title} x ${quantity}` 
+        ? `${selectedAccount?.title || 'TikTok账号'} x ${quantity}` 
         : `${selectedService?.name} (Qty: ${socialQty})`;
         
       const response = await fetch('/api/pay', {
