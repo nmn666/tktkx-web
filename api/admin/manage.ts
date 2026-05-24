@@ -1,10 +1,19 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY!
-);
+  // 环境检查
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    return res.status(500).json({ 
+      error: 'Environment Configuration Missing',
+      message: 'SUPABASE_URL or SUPABASE_ANON_KEY is not set in Vercel.'
+    });
+  }
+
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+  );
+
 
 const ADMIN_SECRET = (process.env.ADMIN_SECRET_KEY || 'tktkx_admin_888').trim();
 
