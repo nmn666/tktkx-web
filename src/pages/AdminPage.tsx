@@ -73,7 +73,9 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    verifyAndFetch(adminKey);
+    const cleanKey = adminKey.trim();
+    setAdminKey(cleanKey);
+    verifyAndFetch(cleanKey);
   };
 
   const handleLogout = () => {
