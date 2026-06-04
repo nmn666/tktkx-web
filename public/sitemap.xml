@@ -399,7 +399,12 @@
   </url>
   <url>
     <loc>https://www.tktkx.cn/news/20260603-1</loc>
-    <lastmod>2026-06-03</lastmod>
+    <lastmod>2026-06-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+</urlset>   <loc>https://www.tktkx.cn/news/20260604-1</loc>
+    <lastmod>2026-06-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
