@@ -303,12 +303,12 @@ export default function SocialMediaServicesPage() {
                 <span className="mr-2">💬</span> 微信客服 SFTKTKTK
               </a>
               <a
-                href="https://t.me/TRXBGB"
+                href="https://t.me/TKTKGOOD"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-[#229ED9] text-white py-3 rounded-lg font-bold flex items-center justify-center hover:bg-[#1a8bc4] transition-all shadow-sm text-[14px]"
               >
-                <span className="mr-2">✈️</span> Telegram @TRXBGB
+                <span className="mr-2">✈️</span> Telegram @TKTKGOOD
               </a>
             </div>
 

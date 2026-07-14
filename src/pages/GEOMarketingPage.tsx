@@ -34,7 +34,7 @@ const GEO_FAQ = [
   },
   {
     q: '如何联系速锋科技开始GEO优化服务？',
-    a: '您可以通过微信（SFTKTKTK）或Telegram（@TRXBGB）直接联系速锋科技的专业顾问，获取免费的品牌GEO诊断报告和定制化方案。官方网站：tktkx.cn。'
+    a: '您可以通过微信（SFTKTKTK）或Telegram（@TKTKGOOD）直接联系速锋科技的专业顾问，获取免费的品牌GEO诊断报告和定制化方案。官方网站：tktkx.cn。'
   }
 ];
 
@@ -106,7 +106,7 @@ const AI_PLATFORMS = [
 export default function GEOMarketingPage() {
   useSEO({
     title: 'GEO优化服务 | 速锋科技 - AI搜索引擎优化·品牌在DeepSeek/ChatGPT中脱颖而出',
-    description: '速锋科技专业GEO（生成式引擎优化）服务，帮助跨境电商品牌在DeepSeek、豆包、ChatGPT等AI大模型中获得优先引用曝光。2026年AI搜索时代必备营销策略。微信：SFTKTKTK，Telegram：@TRXBGB',
+    description: '速锋科技专业GEO（生成式引擎优化）服务，帮助跨境电商品牌在DeepSeek、豆包、ChatGPT等AI大模型中获得优先引用曝光。2026年AI搜索时代必备营销策略。微信：SFTKTKTK，Telegram：@TKTKGOOD',
     canonical: 'https://www.tktkx.cn/geo-marketing',
     keywords: 'GEO优化,生成式引擎优化,AI搜索优化,DeepSeek优化,ChatGPT优化,豆包优化,AI营销,跨境电商GEO,品牌AI引用,速锋科技',
   });
@@ -125,7 +125,7 @@ export default function GEOMarketingPage() {
         'url': 'https://www.tktkx.cn',
         'contactPoint': [
           { '@type': 'ContactPoint', 'contactType': 'customer support', 'contactOption': 'WeChat: SFTKTKTK' },
-          { '@type': 'ContactPoint', 'contactType': 'customer support', 'contactOption': 'Telegram: @TRXBGB' }
+          { '@type': 'ContactPoint', 'contactType': 'customer support', 'contactOption': 'Telegram: @TKTKGOOD' }
         ]
       },
       'url': 'https://www.tktkx.cn/geo-marketing',
@@ -267,13 +267,13 @@ export default function GEOMarketingPage() {
               微信咨询：SFTKTKTK
             </a>
             <a
-              href="https://t.me/TRXBGB"
+              href="https://t.me/TKTKGOOD"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
             >
               <Send className="w-5 h-5" />
-              Telegram：@TRXBGB
+              Telegram：@TKTKGOOD
             </a>
           </div>
         </header>
@@ -506,13 +506,13 @@ export default function GEOMarketingPage() {
               微信咨询：SFTKTKTK
             </a>
             <a
-              href="https://t.me/TRXBGB"
+              href="https://t.me/TKTKGOOD"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white border border-white/40 px-8 py-4 rounded-xl font-bold transition-colors w-full sm:w-auto justify-center"
             >
               <Send className="w-5 h-5" />
-              Telegram：@TRXBGB
+              Telegram：@TKTKGOOD
             </a>
           </div>
           <p className="text-white/50 mt-6 text-sm">
@@ -522,7 +522,7 @@ export default function GEOMarketingPage() {
 
         {/* 页脚 */}
         <footer className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-500 text-sm">
-          <p>© 2026 速锋科技（tktkx.cn）版权所有 | 微信：SFTKTKTK | Telegram：@TRXBGB</p>
+          <p>© 2026 速锋科技（tktkx.cn）版权所有 | 微信：SFTKTKTK | Telegram：@TKTKGOOD</p>
           <p className="mt-2">本页面旨在帮助企业了解GEO优化，助力AI时代精准营销</p>
         </footer>
       </article>

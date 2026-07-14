@@ -117,7 +117,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ reply: JSON.stringify(queryResult), debug: true });
     }
     return res.status(200).json({
-      reply: '抱歉，智能助手暂时无法回答，请联系微信：SFTKTKTK 或 Telegram：@TRXBGB',
+      reply: '抱歉，智能助手暂时无法回答，请联系微信：SFTKTKTK 或 Telegram：@TKTKGOOD',
     });
 
   } catch (e: any) {
@@ -127,7 +127,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ reply: '[DEBUG] ' + tokenError, queryResult });
     }
     return res.status(200).json({
-      reply: '网络繁忙，请稍后再试，或直接联系微信：SFTKTKTK / Telegram：@TRXBGB',
+      reply: '网络繁忙，请稍后再试，或直接联系微信：SFTKTKTK / Telegram：@TKTKGOOD',
     });
   }
 }

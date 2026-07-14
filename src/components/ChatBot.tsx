@@ -76,7 +76,7 @@ export default function ChatBot() {
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'bot',
-        text: '网络繁忙，请稍后重试，或直接联系微信：SFTKTKTK / Telegram：@TRXBGB',
+        text: '网络繁忙，请稍后重试，或直接联系微信：SFTKTKTK / Telegram：@TKTKGOOD',
         time: now(),
       }]);
     } finally {
@@ -232,7 +232,7 @@ export default function ChatBot() {
 
             {/* 底部品牌 */}
             <div className="text-center text-[10px] text-gray-400 py-1 bg-white border-t border-gray-50">
-              速锋科技 · 微信：SFTKTKTK · TG：@TRXBGB
+              速锋科技 · 微信：SFTKTKTK · TG：@TKTKGOOD
             </div>
           </motion.div>
         )}

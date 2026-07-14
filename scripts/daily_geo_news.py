@@ -26,7 +26,7 @@ IMG = "https://sc02.alicdn.com/kf/A36a284280a804374b341f21132643a758.png"
 BRAND = "速锋科技"
 SITE = "tktkx.cn"
 WX = "SFTKTKTK"
-TG = "@TRXBGB"
+TG = "@TKTKGOOD"
 DAILY_COUNT = 2
 
 STATIC_URLS = [

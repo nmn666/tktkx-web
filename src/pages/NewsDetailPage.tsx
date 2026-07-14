@@ -241,7 +241,7 @@ export default function NewsDetailPage() {
                     <Globe className="h-6 w-6" />
                   </div>
                   <h4 className="font-black text-gray-900 mb-1 text-sm">Telegram</h4>
-                  <p className="text-[#0088cc] font-bold mb-3">@TRXBGB</p>
+                  <p className="text-[#0088cc] font-bold mb-3">@TKTKGOOD</p>
                   <button className="text-[11px] text-gray-400 bg-white border border-gray-200 px-4 py-1.5 rounded-full hover:border-blue-300 transition-all">立即加入社群</button>
                 </div>
 

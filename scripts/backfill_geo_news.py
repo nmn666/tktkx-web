@@ -199,7 +199,7 @@ def build_article(date_str: str, category: str, title: str, angle: str) -> dict:
         f"- GEO 生成式引擎优化：让品牌出现在 AI 答案的推荐位\n"
         f"- 指纹环境与账号矩阵建议，适配 AI Agent 高频运营\n\n"
         f"访问 https://www.{SITE}/news 阅读更多行业研报，或打开 https://www.{SITE}/geo-marketing 了解 GEO 套餐。"
-        f"咨询微信：{WX}，Telegram：@TRXBGB。"
+        f"咨询微信：{WX}，Telegram：@TKTKGOOD。"
     )
     return {
         "id": aid,
