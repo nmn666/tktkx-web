@@ -603,15 +603,32 @@ export default function TikTokAccountMarketPage() {
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-3xl p-6 border-2 border-gray-50 flex items-center gap-5">
-                       <div className="bg-green-50 p-4 rounded-2xl text-green-600">
-                          <MessageSquare className="h-8 w-8" />
-                       </div>
-                       <div className="flex-1">
-                          <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">联系客服处理异常</p>
-                          <p className="text-sm font-black text-gray-800">WeChat: SFTKTKTK</p>
-                       </div>
-                       <ChevronRight className="h-5 w-5 text-gray-300" />
+                    <div className="space-y-3">
+                      <div className="bg-white rounded-3xl p-6 border-2 border-gray-50 flex items-center gap-5">
+                         <div className="bg-green-50 p-4 rounded-2xl text-green-600">
+                            <MessageSquare className="h-8 w-8" />
+                         </div>
+                         <div className="flex-1">
+                            <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">微信客服</p>
+                            <p className="text-sm font-black text-gray-800">WeChat: SFTKTKTK</p>
+                         </div>
+                         <ChevronRight className="h-5 w-5 text-gray-300" />
+                      </div>
+                      <a
+                        href="https://t.me/TKTKGOOD"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white rounded-3xl p-6 border-2 border-sky-100 flex items-center gap-5 hover:border-sky-300 transition-colors"
+                      >
+                         <div className="bg-sky-50 p-4 rounded-2xl text-[#0088cc] text-2xl leading-none">
+                            ✈️
+                         </div>
+                         <div className="flex-1">
+                            <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Telegram 飞机号</p>
+                            <p className="text-sm font-black text-[#0088cc]">@TKTKGOOD</p>
+                         </div>
+                         <ChevronRight className="h-5 w-5 text-sky-300" />
+                      </a>
                     </div>
                   </div>
                 </div>

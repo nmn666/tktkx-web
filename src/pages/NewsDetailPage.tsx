@@ -236,14 +236,19 @@ export default function NewsDetailPage() {
                   <button className="text-[11px] text-gray-400 bg-white border border-gray-200 px-4 py-1.5 rounded-full hover:border-blue-300 transition-all">长按或扫码添加</button>
                 </div>
 
-                <div className="bg-[#f8f9fb] border border-[#eef1f6] rounded-xl p-5 flex flex-col items-center text-center group hover:bg-blue-50 transition-all duration-300">
+                <a
+                  href="https://t.me/TKTKGOOD"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#f8f9fb] border border-[#eef1f6] rounded-xl p-5 flex flex-col items-center text-center group hover:bg-sky-50 transition-all duration-300"
+                >
                   <div className="bg-[#0088cc] text-white p-3 rounded-full mb-4 shadow-lg shadow-blue-100 group-hover:scale-110 transition-transform">
                     <Globe className="h-6 w-6" />
                   </div>
-                  <h4 className="font-black text-gray-900 mb-1 text-sm">Telegram</h4>
+                  <h4 className="font-black text-gray-900 mb-1 text-sm">Telegram 飞机号</h4>
                   <p className="text-[#0088cc] font-bold mb-3">@TKTKGOOD</p>
-                  <button className="text-[11px] text-gray-400 bg-white border border-gray-200 px-4 py-1.5 rounded-full hover:border-blue-300 transition-all">立即加入社群</button>
-                </div>
+                  <span className="text-[11px] text-white bg-[#0088cc] px-4 py-1.5 rounded-full group-hover:bg-[#0077b5] transition-all">点击打开 Telegram</span>
+                </a>
 
                 <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl p-6 text-white text-center shadow-xl shadow-blue-100">
                   <h4 className="text-lg font-black mb-2">获取更多资源</h4>

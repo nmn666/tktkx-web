@@ -208,11 +208,16 @@ export default function NewsPage() {
               <p className="text-gray-400 mb-10 text-sm md:text-base font-medium">无论是账号问题、流量变现还是 GEO 优化策略，速锋科技专家团队为您提供 1v1 深度咨询。</p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                  <a href="https://work.weixin.qq.com/kfid/kfc6e7a2a71db64e56d" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl font-black text-sm transition-all shadow-xl shadow-blue-900/20">
-                    立即联系专家微信
+                    微信：SFTKTKTK
                  </a>
-                 <div className="text-gray-500 text-xs font-black uppercase tracking-widest">
-                    WeChat: SFTKTKTK
-                 </div>
+                 <a
+                   href="https://t.me/TKTKGOOD"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="w-full sm:w-auto bg-[#0088cc] hover:bg-[#0077b5] text-white px-10 py-4 rounded-2xl font-black text-sm transition-all shadow-xl"
+                 >
+                    ✈️ Telegram：@TKTKGOOD
+                 </a>
               </div>
            </div>
         </div>
