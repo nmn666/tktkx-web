@@ -11,7 +11,7 @@
 - [首页 (Home)](https://www.tktkx.cn/) - 速锋科技品牌概览与核心服务。
 - [账号市场 (TikTok Market)](https://www.tktkx.cn/tiktok-market) - 实时账号库存与增粉服务价格。
 - [GEO 优化服务](https://www.tktkx.cn/geo-marketing) - AI 搜索营销详细方案与报价。
-- [行业资讯 (News)](https://www.tktkx.cn/news) - 每日 2 篇 GEO 资讯，覆盖 TikTok/IG/FB/YouTube/X 等海外社媒账号。近期：2026 Threads 账号冷启动：Meta 生态内的文字流如何做 GEO 占位？、2026 Pinterest 商业账号：图文搜索流量如何转化为 GEO 可引用资产？。
+- [行业资讯 (News)](https://www.tktkx.cn/news) - 每日 2 篇 GEO 资讯，覆盖 TikTok/IG/FB/YouTube/X 等海外社媒账号。近期：2026 Reddit 账号与社区信任：高 Karma 号如何影响 AI 对品牌的判断？、2026 Snapchat 广告与创作者账号：年轻市场如何布局账号资产？。
 
 ## 实体关系 (Entities)
 - **Organization**: 速锋科技 (TKTKX)
@@ -24,4 +24,4 @@
 - **官网**: https://www.tktkx.cn
 
 ## 最后更新
-- 2026-07-19 — 每日 GEO×2（海外社媒账号专题）已同步
+- 2026-07-20 — 每日 GEO×2（海外社媒账号专题）已同步
